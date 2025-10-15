@@ -9,7 +9,7 @@ const uploadProfilePhoto = async (req, res, next) => {
     try {
         const { username } = req.user;
 
-        const imagePath = req.file ? req.file.path : null;
+        const imagePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
         const user = await User.findByPk(username);
 
@@ -18,12 +18,12 @@ const uploadProfilePhoto = async (req, res, next) => {
         }
 
         // delete old photo file before replacing
-        if(user.image && imagePath && user.image !==  imagePath) {
+        if(user.profile_photo && imagePath && user.profile_photo !==  imagePath) {
             try {
                 const fs = await import('fs');
 
-                if(fs.existsSync(user.image)) {
-                    fs.unlinkSync(user.image);
+                if(fs.existsSync(user.profile_photo)) {
+                    fs.unlinkSync(user.profile_photo);
                 }
             } catch (error) {
                 console.warn("Failed to delete old image: ", error);
@@ -52,7 +52,7 @@ const uploadProfilePhoto = async (req, res, next) => {
 const uploadBannerImage = async (req, res, next) => {
   try {
     const { username } = req.user; 
-    const bannerPath = req.file ? req.file.path : null;
+    const bannerPath = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
     const user = await User.findByPk(username);
 
@@ -110,7 +110,7 @@ const updateProfile = async (req, res, next) => {
 
     return res.status(200).json({
       message: 'Profile updated successfully',
-      user, // optional: include updated user for frontend
+      user,
     });
   } catch (error) {
     console.error('Error updating profile:', error);
@@ -119,6 +119,63 @@ const updateProfile = async (req, res, next) => {
 };
 
 
+/** Fetch user profile */ 
+const fetchProfile = async (req, res, next) => {
+  
+  try {
+    const { username } = req.user;
+
+    const user = await User.findByPk(username);
+
+    if(!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    
+
+    return res.status(200).json({ 
+      user: { 
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        bio: user.bio,
+        profile_photo: user.profile_photo,
+        banner_image: user.banner_image
+      } 
+    });
+
+  } catch (error) {
+    console.error('Error fetching profile: ', error);
+    return res.status(500).json({ message: "Unexpected server error" });
+  }
+};
 
 
-module.exports = { uploadProfilePhoto, uploadBannerImage, updateProfile };
+const fetch_bio_screenname = async (req, res, next) => {
+  const { username } = req.user;
+
+  try {
+    const user = await User.findByPk(username);
+    
+    if(!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { screen_name, bio } = user;
+
+    return res.status(200).json({ screen_name: screen_name, bio: bio });
+  } catch (error) {
+    console.error('Error fetching profile: ', error);
+    return res.status(500).json({ message: "Unexpected server error" });
+  }
+};
+
+module.exports = { 
+  uploadProfilePhoto, 
+  uploadBannerImage, 
+  updateProfile, 
+  fetchProfile, 
+  fetch_bio_screenname 
+};
+

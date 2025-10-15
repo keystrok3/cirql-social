@@ -14,13 +14,28 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import LogoutIcon from "@mui/icons-material/Logout"; // Import Logout Icon
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 
 const Sidebar = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
+
   // Completely hide on mobile
   if (isSmallScreen) return null;
+
+  // Placeholder function for logout logic
+  const handleLogout = () => {
+    // Implement your actual logout logic here (e.g., clearing auth tokens, redirecting)
+    console.log("User logged out");
+    // Example: navigate to the login page
+    // navigate('/login');
+  };
 
   return (
     <Stack
@@ -75,7 +90,7 @@ const Sidebar = () => {
             <ListItemText primary="Notifications" />
           </ListItemButton>
 
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate('/profile')}>
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
@@ -91,6 +106,25 @@ const Sidebar = () => {
           </ListItemButton>
         </List>
       </Box>
+
+      {/* Logout Button Section - Anchored to the bottom */}
+      <Box sx={{ p: 1, mb: 2 }}> {/* Added some padding and margin-bottom for spacing */}
+        <ListItemButton onClick={logout}
+            sx={{
+                '&:hover': {
+                    bgcolor: 'rgba(255, 107, 107, 0.1)', // Slight hover effect
+                },
+            }}
+        >
+          <ListItemIcon>
+            {/* Color the icon red */}
+            <LogoutIcon sx={{ color: '#ff6b6b' }} />
+          </ListItemIcon>
+          {/* Color the text red */}
+          <ListItemText primary="Logout" sx={{ color: '#ff6b6b' }} />
+        </ListItemButton>
+      </Box>
+
     </Stack>
   );
 };

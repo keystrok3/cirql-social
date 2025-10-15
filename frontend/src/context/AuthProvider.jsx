@@ -16,16 +16,26 @@ const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
+    const [ accessToken, setAccessToken ] = useState(() => {
+        try {
+            const access_token = localStorage.getItem('access_token');
+
+            if(access_token) {
+                return access_token;
+            } else {
+                return ""
+            }
+        } catch (error) {
+            console.error("Failed to parse access token from localStorage", error);
+        }
+    });
+
     const [ userData, setUserData ] = useState(() => {
         try {
-            const storedToken = localStorage.getItem('access_token');
             const user = localStorage.getItem('user')
 
-            if(storedToken || userData) {
-                return { 
-                    accessToken: storedToken,
-                    user: JSON.parse(user)
-                }
+            if(user) {
+                return JSON.parse(user)
             }
         } catch (error) {
             console.error("Failed to parse user data from localStorage", error);
@@ -37,7 +47,6 @@ const AuthProvider = ({ children }) => {
 
     // Clear token from localStorage
     const clearAuth = useCallback(() => {
-        localStorage.removeItem('access_token');
         localStorage.removeItem('user');
         setUserData(null);
     }, []);
@@ -67,14 +76,8 @@ const AuthProvider = ({ children }) => {
             if(response.status === 200 || response.status === 201) {
 
                 localStorage.setItem('access_token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
 
-                console.log('Login response: ', response.data);
-
-                setUserData({
-                    accessToken: response.data.token,
-                    user: response.data.user
-                });
+                setAccessToken(response.data.token);
 
                 setSuccessMessage("Login successful! Redirecting...");
 
@@ -89,7 +92,7 @@ const AuthProvider = ({ children }) => {
             const errorMessage = error.response?.data?.message || 'Login Failed. Invalid credentials or server error.';
             setErrors([ errorMessage ]);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -110,9 +113,44 @@ const AuthProvider = ({ children }) => {
     };
 
 
+    const fetch_profile = async () => {
+        try {
+            const profile = await axios.get('/api/profile/fetch_profile/', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            console.log('fetch response: ', profile.data.user)
+
+            localStorage.setItem('user', JSON.stringify(profile.data.user));
+            setUserData(profile.data);
+
+        } catch (error) {
+            console.error('Error fetching: ', error);
+        }
+    };
+
+
+    useEffect(() => {
+        if(accessToken) {
+            fetch_profile();
+        }
+    }, [ accessToken ])
+
+
+
     return (
         <AuthContext.Provider 
-            value={{ loading, successMessage, errors, login, logout }}
+            value={{ 
+                loading, 
+                successMessage, 
+                errors, 
+                userData, 
+                login, 
+                logout, 
+                fetch_profile,
+                accessToken
+            }}
         >{children}</AuthContext.Provider>
     )
 };
