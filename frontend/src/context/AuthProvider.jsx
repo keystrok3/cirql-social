@@ -1,8 +1,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/axios";
+import { apiAuth } from "../api/axios";
+import axios from "axios";
 
 
 export const AuthContext = createContext();
@@ -48,6 +48,8 @@ const AuthProvider = ({ children }) => {
     // Clear token from localStorage
     const clearAuth = useCallback(() => {
         localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+        setAccessToken("");
         setUserData(null);
     }, []);
 
@@ -69,7 +71,7 @@ const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-            const response = await api.post('login/', { 
+            const response = await axios.post('/api/auth/login/', { 
                 ...data
             });
 
@@ -98,9 +100,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await api.post('logout/', {}, {
-                withCredentials: true
-            });
+            const response = await apiAuth.post('/auth/logout/');
 
             if(response.status === 200) {
                 navigate('/login');
@@ -115,11 +115,7 @@ const AuthProvider = ({ children }) => {
 
     const fetch_profile = async () => {
         try {
-            const profile = await axios.get('/api/profile/fetch_profile/', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            const profile = await apiAuth.get('/profile/fetch_profile/');
             console.log('fetch response: ', profile.data.user)
 
             localStorage.setItem('user', JSON.stringify(profile.data.user));

@@ -1,16 +1,14 @@
 import { Avatar, Box, Button, Divider, IconButton, TextField } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
-import { useAuth } from '../../context/AuthProvider';
-import axios from 'axios';
-import malavaforest from '../../assets/malavaforest.jpg';
-import profilepic from '../../assets/profilepic.jpg';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import EditIcon from '@mui/icons-material/Edit';
+import { useEffect, useState, useRef } from 'react';
+import { useAuth } from '../../context/AuthProvider';
+import { apiAuth } from '../../api/axios';
 
 // API Endpoints
-const PROFILE_UPDATE_URL = '/api/profile/update_profile/';
-const PROFILE_PHOTO_UPLOAD_URL = '/api/profile/upload_profile_photo';
-const BANNER_PHOTO_UPLOAD_URL = '/api/profile/upload_banner_photo';
+const PROFILE_UPDATE_URL = '/profile/update_profile/';
+const PROFILE_PHOTO_UPLOAD_URL = '/profile/upload_profile_photo';
+const BANNER_PHOTO_UPLOAD_URL = '/profile/upload_banner_photo';
 
 const EditProfile = () => {
     
@@ -66,7 +64,7 @@ const EditProfile = () => {
 
         try {
             // Changed from axios.post to axios.patch
-            const response = await axios.patch(url, formData, getAuthHeaders());
+            const response = await apiAuth.patch(url, formData);
 
             await fetch_profile();
 
@@ -84,10 +82,9 @@ const EditProfile = () => {
         // 1. Update text profile details first
         try {
             // Changed from axios.post to axios.patch
-            const response = await axios.patch(
+            const response = await apiAuth.patch(
                 PROFILE_UPDATE_URL, 
                 profileDetails, 
-                getAuthHeaders()
             );
 
             
@@ -115,11 +112,7 @@ const EditProfile = () => {
     useEffect(() => {
         async function fetch_bio_screen_name() {
             try {
-                const response = await axios.get('/api/profile/fetch-bio-screenname/', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
+                const response = await apiAuth.get('/profile/fetch-bio-screenname/');
 
                 if(!response.status === 200) {
                     console.error('Could not fetch bio and screen name: ', response.statusText);

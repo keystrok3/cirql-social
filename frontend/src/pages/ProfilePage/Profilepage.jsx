@@ -14,6 +14,7 @@ import EditModal from './EditModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
+import { useEffect } from 'react';
 
 const Profilepage = () => {
     const { userData } = useAuth();
@@ -27,7 +28,6 @@ const Profilepage = () => {
         setModalOpen(prev => !prev);
     };
 
-
     return (
         <Box>
             <Box sx={{
@@ -37,7 +37,7 @@ const Profilepage = () => {
             }}>
                 <Box 
                     component="img"
-                    src={`http://localhost:8000/${userData.user.banner_image}`}
+                    src={`http://localhost:8000/${userData?.user?.banner_image}`}
                     sx={{
                         width: '100%',
                         height: '100%',
@@ -76,7 +76,7 @@ const Profilepage = () => {
                 >
                     <Box position={'relative'} >
                         <Avatar 
-                            src={`http://localhost:8000/${userData.user.profile_photo}`}
+                            src={`http://localhost:8000/${userData?.user?.profile_photo}`}
                             sx={{
                                 position: 'absolute',
                                 top: {xs: '-80px', sm: '-110px'},

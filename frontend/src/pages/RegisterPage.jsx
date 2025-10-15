@@ -1,9 +1,8 @@
-import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../api/axios';
 
 const RegisterPage = () => {
 
@@ -33,7 +32,7 @@ const RegisterPage = () => {
     try {
       setLoading(true);
 
-      const response = await api.post('register/', { ...userSignUpDetails })
+      const response = await axios.post('/api/auth/register/', { ...userSignUpDetails })
 
       if(response.status === 201 || response.status === 200) {
         console.log('User registered: ', response.data);

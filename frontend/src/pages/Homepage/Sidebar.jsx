@@ -22,7 +22,7 @@ const Sidebar = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { logout } = useAuth();
+  const { logout, userData } = useAuth();
 
   const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const Sidebar = () => {
         }}
       >
         <Avatar
-          src="/path/to/image.jpg"
+          src={`http://localhost:8000/${userData?.user?.profile_photo}`}
           sx={{
             width: 80,
             height: 80,

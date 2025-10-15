@@ -1,21 +1,9 @@
 import axios from "axios";
 
-// ==========================
-//  Public API (no auth)
-// ==========================
-export const api = axios.create({
-  baseURL: "/api/auth/",
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true, // allows sending/receiving cookies
-});
-
-// ==========================
+// ===============================
 //  Authenticated API
-// ==========================
-export const apiAuth = axios.create({
-  baseURL: "/api/",
-  withCredentials: true, // include cookies if needed
-});
+// ===============================
+export const apiAuth = axios.create({ baseURL: "/api/" });
 
 // ==========================
 //  Token Refresh Logic
@@ -47,9 +35,9 @@ apiAuth.interceptors.request.use((config) => {
   return config;
 });
 
-// ==========================
+// ======================================
 //  Response Interceptor
-// ==========================
+// ======================================
 let isRefreshing = false;
 let subscribers = [];
 
