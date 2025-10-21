@@ -10,12 +10,13 @@ export const apiAuth = axios.create({ baseURL: "/api/" });
 // ==========================
 const refreshTokenCall = async () => {
   try {
-    // Send empty body, but include credentials (cookies)
+    console.log('Refreshing token...')
     const response = await axios.post(
       "/api/auth/refresh-token/",
       {},
       { withCredentials: true }
     );
+
 
     const newAccessToken = response.data.access_token;
     localStorage.setItem("access_token", newAccessToken);

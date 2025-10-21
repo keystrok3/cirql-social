@@ -31,11 +31,6 @@ const EditProfile = () => {
         bio: ""
     });
 
-    const getAuthHeaders = () => ({
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        }
-    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
