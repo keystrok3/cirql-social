@@ -3,6 +3,7 @@ const User = require("./user.js");
 const BlacklistedTokens = require("./blacklistedtokens.js");
 const OutstandingTokens = require("./outstandingtokens.js");
 const Follows = require("./user_follows.js");
+const Post = require("./post.js");
 
 const sync_tables = async () => {
 
@@ -38,6 +39,9 @@ const sync_tables = async () => {
         as: 'Followee'
     })
 
+    User.hasMany(Post, { foreignKey: 'user' });
+    Post.belongsTo(User);
+
 
     try {
         await User.sync();
@@ -51,6 +55,9 @@ const sync_tables = async () => {
 
         await BlacklistedTokens.sync();
         console.log('Table blacklistedtokens created');
+
+        await Post.sync();
+        console.log('Table posts created')
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);
