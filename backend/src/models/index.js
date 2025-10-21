@@ -2,15 +2,42 @@
 const User = require("./user.js");
 const BlacklistedTokens = require("./blacklistedtokens.js");
 const OutstandingTokens = require("./outstandingtokens.js");
-
+const Follows = require("./user_follows.js");
 
 const sync_tables = async () => {
 
     User.hasMany(OutstandingTokens, { foreignKey: 'username', sourceKey: 'username' });
     OutstandingTokens.belongsTo(User, { foreignKey: 'username', targetKey: 'username' })
 
-    OutstandingTokens.hasOne(BlacklistedTokens, { foreignKey: 'token_id', sourceKey: 'id'});
+    OutstandingTokens.hasOne(
+        BlacklistedTokens, 
+        { 
+            foreignKey: 'token_id', 
+            sourceKey: 'id', 
+            onDelete: 'CASCADE'
+        }
+    );
     BlacklistedTokens.belongsTo(OutstandingTokens, { foreignKey: 'token_id', targetKey: 'id'})
+
+    // a user can follow many users
+    User.hasMany(Follows, { foreignKey: 'user', as: 'Following' });
+    // the follows entry belongs to the user
+    Follows.belongsTo(User, { foreignKey: 'user', as: 'Follower' });
+
+    // A user can be followed by many users
+    User.hasMany(
+        Follows, 
+        { 
+            foreignKey: 'follows', 
+            as: 'Followers' // Alias used when retrieving the list of users following this user 
+        }
+    )
+    // the follows entry belongs to the user (the followee)
+    Follows.belongsTo(User, {
+        foreignKey: 'follows',
+        as: 'Followee'
+    })
+
 
     try {
         await User.sync();
@@ -18,6 +45,9 @@ const sync_tables = async () => {
 
         await OutstandingTokens.sync();
         console.log('Table outstandingtokens created');
+
+        await Follows.sync();
+        console.log('Table user_follows created');
 
         await BlacklistedTokens.sync();
         console.log('Table blacklistedtokens created');
