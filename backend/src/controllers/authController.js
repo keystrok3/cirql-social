@@ -144,6 +144,7 @@ const refresh_token = async (req, res) => {
 
     let payload;
     try {
+        console.log('Verifying refresh token...');
       payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     } catch (error) {
       return res.status(401).json({ message: "Invalid or expired token" });

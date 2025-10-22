@@ -14,7 +14,9 @@ const refreshTokenCall = async () => {
     const response = await axios.post(
       "/api/auth/refresh-token/",
       {},
-      { withCredentials: true }
+      {
+        withCredentials: true
+      }
     );
 
 
