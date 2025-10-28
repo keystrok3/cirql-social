@@ -4,6 +4,7 @@ const BlacklistedTokens = require("./blacklistedtokens.js");
 const OutstandingTokens = require("./outstandingtokens.js");
 const Follows = require("./user_follows.js");
 const Post = require("./post.js");
+const PostImage = require("./post_images.js");
 
 const sync_tables = async () => {
 
@@ -39,9 +40,18 @@ const sync_tables = async () => {
         as: 'Followee'
     })
 
-    User.hasMany(Post, { foreignKey: 'user' });
-    Post.belongsTo(User);
+    Post.hasMany(PostImage, {
+        onDelete: 'CASCADE',
+    });
 
+    PostImage.belongsTo(Post, {
+        foreignKey: 'post',
+    });
+
+
+
+    Post.hasMany(PostImage);
+    PostImage.belongsTo(Post, { foreignKey: 'post' })
 
     try {
         await User.sync();

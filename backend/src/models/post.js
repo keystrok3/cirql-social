@@ -27,9 +27,6 @@ Post.init({
         }
     },
 
-    image_url: {
-        type: DataTypes.STRING,
-    }
 }, {
     sequelize,
     modelName: 'Post',

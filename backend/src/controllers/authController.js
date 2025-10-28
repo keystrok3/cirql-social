@@ -87,7 +87,7 @@ const login = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.ENV === "production",
             sameSite: "strict",
-            path: "/refresh",
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -135,6 +135,32 @@ const logout = async (req, res, next) => {
     }
 };
 
+const verifyToken = (req, res, next) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    
+    return res.status(200).json({ message: "Success" });
+
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
+    } else if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+
+    console.error('Error verifying token:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 const refresh_token = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken; 
@@ -168,7 +194,7 @@ const refresh_token = async (req, res) => {
 
     console.log('Refresh token: ', payload)
  
-    const newAccessToken = generateAccessToken({ username: payload.user });
+    const newAccessToken = generateAccessToken({ username: payload.username });
 
     return res.status(201).json({ access_token: newAccessToken });
 
@@ -179,4 +205,4 @@ const refresh_token = async (req, res) => {
 };
 
 
-module.exports = { createUser, login, logout, refresh_token };
+module.exports = { createUser, login, logout, refresh_token, verifyToken };

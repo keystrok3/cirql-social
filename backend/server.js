@@ -1,6 +1,7 @@
 
 require('dotenv').config({ path: './.env'});
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const express = require('express');
 
@@ -20,6 +21,10 @@ sync_tables();
 
 
 // Middleware
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -28,6 +33,7 @@ app.use('/uploads', express.static('uploads'));
 //Routes
 app.use('/api/auth', require('./src/routes/authRoute.js'));
 app.use('/api/profile', require('./src/routes/userRoute.js'));
+app.use('/api/posts', require('./src/routes/postsRoute.js'));
 
 
 

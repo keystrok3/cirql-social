@@ -52,9 +52,6 @@ const Home = () => {
           {/* Top component — sticky on desktop */}
           <Box
             sx={{
-              position: { xs: "static", sm: "sticky" },
-              top: ".5em",
-              zIndex: 2,
               backgroundColor: "#fff",
               borderBottom: "1px solid #e0e0e0",
               borderRadius: "5px 5px 0 0",

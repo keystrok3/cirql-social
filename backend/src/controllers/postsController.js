@@ -1,14 +1,15 @@
 
 const Post = require("../models/post");
 const User = require("../models/user");
+const PostImage = require("../models/post_images");
 
 
 /**
  * User creates post
 */
 const create_post = async (req, res, next) => {
-    const { username } = res.user;
-    const { post_text, image_url } = req.body;
+    const { username } = req.user;
+    const { post_text } = req.body;
 
     try {
         const user = await User.findByPk(username);
@@ -17,12 +18,24 @@ const create_post = async (req, res, next) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        await Post.create({
+        const post = await Post.create({
             post_text: post_text,
-            image_url: image_url
+            user: username
         });
 
         console.log('post created');
+
+        if(req.files && req.files.length > 0) {
+            const images = req.files.map(file => {
+                const normalizedPath = file.path.replace(/\\/g, '/');
+                return {
+                    post: post.post_id,
+                    post_image_url: normalizedPath
+                };
+            });
+            
+            await PostImage.bulkCreate(images);
+        }
 
         return res.status(201).json({ message: "Post created" });
 

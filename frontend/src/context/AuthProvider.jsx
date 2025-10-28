@@ -126,6 +126,21 @@ const AuthProvider = ({ children }) => {
         }
     };
 
+    const verifyAuth = async () => {
+        try {
+            const response = await apiAuth.get('/auth/verify-token');
+            if(response.status !== 200) {
+                clearAuth();
+                return false;
+            } else {
+                return true
+            }
+        } catch (error) {
+            console.log("Error verifying auth: ", error)
+            clearAuth()
+            return false;
+        }
+    };
 
     useEffect(() => {
         if(accessToken) {
@@ -145,7 +160,8 @@ const AuthProvider = ({ children }) => {
                 login, 
                 logout, 
                 fetch_profile,
-                accessToken
+                accessToken,
+                verifyAuth
             }}
         >{children}</AuthContext.Provider>
     )
