@@ -30,11 +30,14 @@ const create_post = async (req, res, next) => {
                 const normalizedPath = file.path.replace(/\\/g, '/');
                 return {
                     post: post.post_id,
-                    post_image_url: normalizedPath
+                    post_image_url: normalizedPath,
+                    post_id: post.post_id
                 };
             });
             
             await PostImage.bulkCreate(images);
+        } else {
+            console.log('Could not post images: ', req.files)
         }
 
         return res.status(201).json({ message: "Post created" });

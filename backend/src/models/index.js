@@ -45,13 +45,13 @@ const sync_tables = async () => {
     });
 
     PostImage.belongsTo(Post, {
-        foreignKey: 'post',
+        foreignKey: 'post_id',
     });
 
 
 
     Post.hasMany(PostImage);
-    PostImage.belongsTo(Post, { foreignKey: 'post' })
+    PostImage.belongsTo(Post, { foreignKey: 'post_id' })
 
     try {
         await User.sync();
@@ -68,6 +68,9 @@ const sync_tables = async () => {
 
         await Post.sync();
         console.log('Table posts created')
+
+        await PostImage.sync();
+        console.log('Table post_images created')
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);

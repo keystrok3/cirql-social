@@ -62,7 +62,7 @@ export default function PostComposer() {
     formData.append('post_text', content);
 
     for(let i = 0; i < images.length; i++) {
-      formData.append('images', images[i]);
+      formData.append('images', images[i].file);
     }
 
     try {

@@ -8,12 +8,13 @@ const Post = require('./post');
 class PostImage extends Model {}
 
 PostImage.init({
-    post: {
+    post_id: {
         type: DataTypes.INTEGER,
         references: {
             model: Post,
             key: 'post_id'
-        }
+        },
+        allowNull: false
     },
     post_image_url: {
         type: DataTypes.STRING,
