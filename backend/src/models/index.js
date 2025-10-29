@@ -40,18 +40,14 @@ const sync_tables = async () => {
         as: 'Followee'
     })
 
-    Post.hasMany(PostImage, {
-        onDelete: 'CASCADE',
-    });
+    User.hasMany(Post, { foreignKey: 'user' });
+    Post.belongsTo(User, { foreignKey: 'user' });
 
-    PostImage.belongsTo(Post, {
-        foreignKey: 'post_id',
-    });
+    Post.hasMany(PostImage, { onDelete: 'CASCADE' });
+    PostImage.belongsTo(Post, { foreignKey: 'post_id' });
 
-
-
-    Post.hasMany(PostImage);
-    PostImage.belongsTo(Post, { foreignKey: 'post_id' })
+    Post.hasMany(PostImage, { foreignKey: 'post_id' });
+    PostImage.belongsTo(Post, { foreignKey: 'post_id' });
 
     try {
         await User.sync();

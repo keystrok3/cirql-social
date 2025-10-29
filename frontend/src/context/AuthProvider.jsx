@@ -100,8 +100,8 @@ const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await apiAuth.post('/auth/logout/');
-
+            const response = await apiAuth.post('/auth/logout/', {}, { withCredentials: true });
+            console.log(response)
             if(response.status === 200) {
                 navigate('/login');
             }

@@ -1,28 +1,54 @@
 import { Box, Typography } from "@mui/material";
+import PostCard from "../../components/PostCard/PostCard";
+import { useState } from "react";
+import axios from 'axios';
+import { apiAuth } from '../../api/axios'
+import { useId } from "react";
 
 const Feed = () => {
+  const [ posts, setPosts ] = useState([]);
+
+  const fetchAllPosts = async () => {
+    try {
+      const response = await apiAuth.get('/posts/fetch-all-posts');
+
+      if(response.status !== 200) {
+        console.log('Could not fetch', response.statusText);
+      }
+
+      setPosts([ ...response.data.data ]);
+    } catch (error) {
+      console.error('Error fetching: ', error);
+    }
+  };
+
+
+  useState(() => {
+    fetchAllPosts();
+  }, [ ]);
+
   return (
     <Box p={2}>
       <Typography variant="h6" gutterBottom>
         Feed
       </Typography>
-      {[...Array(30)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            p: 1.5,
-            mb: 1,
-            borderRadius: "5px",
-            backgroundColor: "#f9f9f9",
-            border: "1px solid #e0e0e0",
-          }}
-        >
-          <Typography variant="body1">Post #{i + 1}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Example content for post #{i + 1}.
-          </Typography>
-        </Box>
-      ))}
+
+      {
+        posts.map((post, idx) => {
+          return (
+            <PostCard 
+              key={`post ${idx}`} 
+              profilePic={post.profile_photo}
+              username={post.user}
+              text={post.post_text}
+              timePosted={post.createdAt}
+              image={post?.images[0]}
+              screen_name={post.screen_name}
+            />
+          )
+          
+        })
+      }
     </Box>
   );
 };

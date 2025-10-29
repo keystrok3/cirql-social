@@ -111,7 +111,7 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
-        const refreshToken = res.cookies?.refreshToken;
+        const refreshToken = req.cookies?.refreshToken;
 
         const hashedToken = crypto.createHash('sha256').update(refreshToken).digest('hex');
 
@@ -135,7 +135,7 @@ const logout = async (req, res, next) => {
     }
 };
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -143,6 +143,7 @@ const verifyToken = (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
+
 
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     
@@ -203,6 +204,7 @@ const refresh_token = async (req, res) => {
     return res.status(500).json({ message: "Unexpected error occurred" });
   }
 };
+
 
 
 module.exports = { createUser, login, logout, refresh_token, verifyToken };
