@@ -4,6 +4,7 @@ import Feed from "./Feed";
 import InfoSidebar from "./InfoSidebar";
 import TopSection from "./TopSection"; // ← your top component
 
+
 const Home = () => {
   return (
     <Box
@@ -44,22 +45,20 @@ const Home = () => {
         <Box
           sx={{
             flex: { xs: "100%", sm: "60%" },
-            border: "1px solid #d0d0d0",
             borderRadius: "5px",
-            backgroundColor: "#fff",
+            backgroundColor: "background.default",
           }}
         >
           {/* Top component — sticky on desktop */}
           <Box
             sx={{
-              backgroundColor: "#fff",
-              borderBottom: "1px solid #e0e0e0",
+              backgroundColor: "background.default",
               borderRadius: "5px 5px 0 0",
             }}
           >
             <TopSection />
           </Box>
-
+          
           {/* Feed content below */}
           <Feed />
         </Box>

@@ -81,7 +81,7 @@ const PostCard = ({ profilePic, username, screen_name, timePosted, text, image }
           {image && (
             <Box
               component="img"
-              src={image}
+              src={`http://localhost:8000/${image}`}
               alt="Post content"
               sx={{
                 width: '100%',
@@ -103,8 +103,6 @@ const PostCard = ({ profilePic, username, screen_name, timePosted, text, image }
           alignItems: 'center',
           mt: 2,
           pt: 1,
-          borderTop: '1px solid',
-          borderColor: 'divider',
         }}
       >
         {/* Like */}

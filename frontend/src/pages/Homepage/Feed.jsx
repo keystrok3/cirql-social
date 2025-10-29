@@ -29,10 +29,6 @@ const Feed = () => {
 
   return (
     <Box p={2}>
-      <Typography variant="h6" gutterBottom>
-        Feed
-      </Typography>
-
       {
         posts.map((post, idx) => {
           return (

@@ -228,7 +228,7 @@ export default function PostComposer() {
               sx={{
                 borderRadius: 2,
                 textTransform: "none",
-                fontWeight: 600,
+                fontWeight: 500,
                 px: 3,
                 py: 1,
                 boxShadow: 2,
