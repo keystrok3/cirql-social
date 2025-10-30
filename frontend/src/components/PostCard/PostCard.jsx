@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 import { elapsed_time } from "../../utils/elapsed_time";
 import usePostLikes from "../../hooks/usePostLikes";
+import useReposts from "../../hooks/useReposts";
 
 const PostCard = ({
   post_id,
@@ -25,10 +26,10 @@ const PostCard = ({
   text,
   image,
 }) => {
-  const [repostCount, setRepostCount] = React.useState(0);
   const [commentCount, setCommentCount] = React.useState(0);
 
   const { likesCount, currentUserLikes, likePost, unlikePost } = usePostLikes(post_id);
+  const { repostCount, reposted, make_repost, undo_repost } = useReposts(post_id)
 
   const theme = useTheme();
 
@@ -44,7 +45,18 @@ const PostCard = ({
     }
   };
 
-  const handleRepost = () => setRepostCount(repostCount + 1);
+  const handleRepost = async () => {
+    try {
+      if(reposted) {
+        await undo_repost();
+      } else {
+        await make_repost();
+      }
+    } catch (error) {
+      console.error("Error toggling repost:", error);
+    }
+  } 
+
   const handleComment = () => setCommentCount(commentCount + 1);
 
   return (
@@ -144,7 +156,7 @@ const PostCard = ({
           <IconButton onClick={handleRepost} color="default" size="small">
             <Repeat />
           </IconButton>
-          {repostCount > 0 && (
+          {reposted && (
             <Typography variant="body2" color="text.secondary">
               {repostCount}
             </Typography>
