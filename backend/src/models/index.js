@@ -5,6 +5,7 @@ const OutstandingTokens = require("./outstandingtokens.js");
 const Follows = require("./user_follows.js");
 const Post = require("./post.js");
 const PostImage = require("./post_images.js");
+const PostLike = require("./like.js");
 
 const sync_tables = async () => {
 
@@ -49,6 +50,9 @@ const sync_tables = async () => {
     Post.hasMany(PostImage, { foreignKey: 'post_id' });
     PostImage.belongsTo(Post, { foreignKey: 'post_id' });
 
+    Post.hasMany(PostLike, { foreignKey: 'post_id'});
+    PostLike.belongsTo(Post, { foreignKey: 'post_id' });
+
     try {
         await User.sync();
         console.log(`Table accounts created`);
@@ -67,6 +71,9 @@ const sync_tables = async () => {
 
         await PostImage.sync();
         console.log('Table post_images created')
+
+        await PostLike.sync();
+        console.log('Table post_likes created')
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);
