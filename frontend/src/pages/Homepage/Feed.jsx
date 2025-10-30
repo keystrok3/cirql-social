@@ -40,6 +40,7 @@ const Feed = () => {
               timePosted={post.createdAt}
               image={post?.images[0]}
               screen_name={post.screen_name}
+              post_id={post.post_id}
             />
           )
           
