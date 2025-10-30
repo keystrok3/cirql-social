@@ -1,11 +1,12 @@
 
-const User = require("./user.js");
 const BlacklistedTokens = require("./blacklistedtokens.js");
 const OutstandingTokens = require("./outstandingtokens.js");
-const Follows = require("./user_follows.js");
-const Post = require("./post.js");
 const PostImage = require("./post_images.js");
 const PostLike = require("./like.js");
+const Follows = require("./user_follows.js");
+const Repost = require("./repost.js");
+const Post = require("./post.js");
+const User = require("./user.js");
 
 const sync_tables = async () => {
 
@@ -44,17 +45,23 @@ const sync_tables = async () => {
     User.hasMany(Post, { foreignKey: 'user' });
     Post.belongsTo(User, { foreignKey: 'user' });
 
-    Post.hasMany(PostImage, { onDelete: 'CASCADE' });
+    // PostImages relationship
+    Post.hasMany(PostImage, { foreignKey: 'post_id', onDelete: 'CASCADE' });
     PostImage.belongsTo(Post, { foreignKey: 'post_id' });
 
-    Post.hasMany(PostImage, { foreignKey: 'post_id' });
-    PostImage.belongsTo(Post, { foreignKey: 'post_id' });
-
+    // Likes relationships 
     Post.hasMany(PostLike, { foreignKey: 'post_id'});
     PostLike.belongsTo(Post, { foreignKey: 'post_id' });
 
     User.hasMany(PostLike, { foreignKey: 'user' });
     PostLike.belongsTo(User, { foreignKey: 'user' });
+
+    // Reposts relationships
+    Post.hasMany(Repost, { foreignKey: 'post_id' });
+    Repost.belongsTo(Post, { foreignKey: 'post_id'});
+
+    User.hasMany(Repost, { foreignKey: 'user' });
+    Repost.belongsTo(User, { foreignKey: 'user' });
 
     try {
         await User.sync();
@@ -70,13 +77,16 @@ const sync_tables = async () => {
         console.log('Table blacklistedtokens created');
 
         await Post.sync();
-        console.log('Table posts created')
+        console.log('Table posts created');
 
         await PostImage.sync();
-        console.log('Table post_images created')
+        console.log('Table post_images created');
 
         await PostLike.sync();
-        console.log('Table post_likes created')
+        console.log('Table post_likes created');
+
+        await Repost.sync();
+        console.log('Table reposts created');
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);
