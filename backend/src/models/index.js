@@ -53,6 +53,9 @@ const sync_tables = async () => {
     Post.hasMany(PostLike, { foreignKey: 'post_id'});
     PostLike.belongsTo(Post, { foreignKey: 'post_id' });
 
+    User.hasMany(PostLike, { foreignKey: 'user' });
+    PostLike.belongsTo(User, { foreignKey: 'user' });
+
     try {
         await User.sync();
         console.log(`Table accounts created`);
