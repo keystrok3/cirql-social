@@ -99,7 +99,7 @@ export default function PostComposer() {
       <Card
         sx={{
           width: "100%",
-          maxWidth: 700,
+          // maxWidth: 700,
           borderRadius: 3,
           boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
           transition: "box-shadow 0.3s",

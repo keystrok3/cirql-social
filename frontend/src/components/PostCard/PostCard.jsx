@@ -16,6 +16,7 @@ import {
 import { elapsed_time } from "../../utils/elapsed_time";
 import usePostLikes from "../../hooks/usePostLikes";
 import useReposts from "../../hooks/useReposts";
+import useComments from "../../hooks/useComments";
 
 const PostCard = ({
   post_id,
@@ -26,10 +27,10 @@ const PostCard = ({
   text,
   image,
 }) => {
-  const [commentCount, setCommentCount] = React.useState(0);
 
   const { likesCount, currentUserLikes, likePost, unlikePost } = usePostLikes(post_id);
   const { repostCount, reposted, make_repost, undo_repost } = useReposts(post_id)
+  const { commentCount } = useComments(post_id);
 
   const theme = useTheme();
 
@@ -57,12 +58,11 @@ const PostCard = ({
     }
   } 
 
-  const handleComment = () => setCommentCount(commentCount + 1);
+  // const handleComment = () => setCommentCount(commentCount + 1);
 
   return (
     <Card
       sx={{
-        maxWidth: 600,
         margin: "20px auto",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         borderRadius: 2,
@@ -165,7 +165,7 @@ const PostCard = ({
 
         {/* Comment */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton onClick={handleComment} color="default" size="small">
+          <IconButton color="default" size="small">
             <ChatBubbleOutline />
           </IconButton>
           {commentCount > 0 && (

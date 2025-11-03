@@ -7,6 +7,7 @@ const Follows = require("./user_follows.js");
 const Repost = require("./repost.js");
 const Post = require("./post.js");
 const User = require("./user.js");
+const Comment = require("./comments.js");
 
 const sync_tables = async () => {
 
@@ -63,6 +64,13 @@ const sync_tables = async () => {
     User.hasMany(Repost, { foreignKey: 'user' });
     Repost.belongsTo(User, { foreignKey: 'user' });
 
+    // Comments relationships
+    Post.hasMany(Comment, { foreignKey: 'post_id' });
+    Comment.belongsTo(Post, { foreignKey: 'post_id' });
+
+    User.hasMany(Comment, { foreignKey: 'user' });
+    Comment.belongsTo(User, { foreignKey: 'user' });
+
     try {
         await User.sync();
         console.log(`Table accounts created`);
@@ -87,6 +95,9 @@ const sync_tables = async () => {
 
         await Repost.sync();
         console.log('Table reposts created');
+
+        await Comment.sync()
+        console.log("Table comments created")
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);

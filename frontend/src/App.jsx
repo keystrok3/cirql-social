@@ -8,26 +8,31 @@ import Home from './pages/Homepage/Home.jsx';
 import Profilepage from './pages/ProfilePage/Profilepage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import EditProfile from './pages/ProfilePage/EditProfile.jsx';
+import MainLayout from './pages/Homepage/MainLayout.jsx';
 
 const App = () => {
-
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path='/register' element={<RegisterPage />}/>
-          <Route path='/login' element={<LoginPage />}/>
+          {/* Public routes */}
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
+          {/* Protected + Layout routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path='/' element={<Home />}/>
-            <Route path='/home' element={<Home />}/>
-            <Route path='/profile' element={<Profilepage />}/>
-            <Route path='/edit-profile' element={<EditProfile />}/>
+            {/* Main layout (desktop only) */}
+            <Route element={<MainLayout />}>
+              <Route index element={<Home />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/profile" element={<Profilepage />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+            </Route>
           </Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>
-  )
+  );
 };
 
 export default App;

@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography, // Imported for username display
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -14,47 +15,41 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import LogoutIcon from "@mui/icons-material/Logout"; // Import Logout Icon
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 
 const Sidebar = () => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  // Using theme.breakpoints.up('sm') is often cleaner for desktop components
+  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
 
   const { logout, userData } = useAuth();
 
   const navigate = useNavigate();
 
-  // Completely hide on mobile
-  if (isSmallScreen) return null;
-
-  // Placeholder function for logout logic
-  const handleLogout = () => {
-    // Implement your actual logout logic here (e.g., clearing auth tokens, redirecting)
-    console.log("User logged out");
-    // Example: navigate to the login page
-    // navigate('/login');
-  };
+  // Hide on screens smaller than 'sm' (which is already handled in Home.jsx, but good to keep for consistency if needed)
+  if (!isDesktop) return null;
 
   return (
+    // Stack now relies on the Home.jsx parent Box for size/position
     <Stack
       direction="column"
-      height="96vh"
-      width="220px"
       sx={{
         bgcolor: "background.paper",
         width: '100%',
+        height: '100%', // Fill the parent's height
       }}
       justifyContent="space-between"
     >
-      {/* Avatar Section */}
+      {/* Avatar and User Info Section */}
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          py: 2,
+          py: 3, // Increased padding
+          borderBottom: '1px solid #eee', // Visual separator
         }}
       >
         <Avatar
@@ -62,16 +57,26 @@ const Sidebar = () => {
           sx={{
             width: 80,
             height: 80,
+            mb: 1,
+            border: '2px solid',
+            borderColor: 'primary.main', // Added border for emphasis
           }}
         />
+        <Typography variant="h6" component="p" fontWeight="bold">
+          {userData?.user?.username}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          @{userData?.user?.screen_name}
+        </Typography>
       </Box>
 
       {/* Menu List */}
-      <Box flex={1}>
+      <Box flexGrow={1} overflow="auto"> {/* Use flexGrow instead of fixed flex: 1 */}
         <List>
-          <ListItemButton>
+          {/* Menu Items */}
+          <ListItemButton onClick={() => navigate('/')}> {/* Navigating to home/feed */}
             <ListItemIcon>
-              <FeedIcon />
+              <FeedIcon color="primary" /> {/* Added color */}
             </ListItemIcon>
             <ListItemText primary="Feed" />
           </ListItemButton>
@@ -108,20 +113,24 @@ const Sidebar = () => {
       </Box>
 
       {/* Logout Button Section - Anchored to the bottom */}
-      <Box sx={{ p: 1, mb: 2 }}> {/* Added some padding and margin-bottom for spacing */}
-        <ListItemButton onClick={logout}
-            sx={{
-                '&:hover': {
-                    bgcolor: 'rgba(255, 107, 107, 0.1)', // Slight hover effect
-                },
-            }}
+      <Box sx={{ p: 1, mt: 'auto', borderTop: '1px solid #eee' }}> {/* Added auto margin to push it down */}
+        <ListItemButton 
+          onClick={logout}
+          sx={{
+            borderRadius: '5px',
+            '&:hover': {
+              bgcolor: 'error.light', // Use theme color for hover
+              '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                color: 'white', // White text/icon on hover
+              },
+            },
+          }}
         >
           <ListItemIcon>
-            {/* Color the icon red */}
-            <LogoutIcon sx={{ color: '#ff6b6b' }} />
+            {/* Use theme.palette.error.main and let hover handle color */}
+            <LogoutIcon color="error" />
           </ListItemIcon>
-          {/* Color the text red */}
-          <ListItemText primary="Logout" sx={{ color: '#ff6b6b' }} />
+          <ListItemText primary="Logout" primaryTypographyProps={{ color: 'error.main', fontWeight: 'bold' }} />
         </ListItemButton>
       </Box>
 
