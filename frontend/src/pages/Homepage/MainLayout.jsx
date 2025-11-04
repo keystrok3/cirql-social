@@ -5,53 +5,56 @@ import InfoSidebar from "./InfoSidebar";
 
 const MainLayout = () => {
   return (
-    <Box display="flex" gap={2} padding=".25em" sx={{ alignItems: "flex-start" }}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "1fr", sm: "25% 50% 25%" },
+        backgroundColor: "#fff",
+        minHeight: "100vh",
+        overflow: "hidden", // prevent double scrollbars
+      }}
+    >
+      {/* Left Sidebar */}
       <Box
         sx={{
           display: { xs: "none", sm: "block" },
-          flex: "30%",
-          backgroundColor: "#fff",
-          border: "1px solid #b8b8b8ff",
-          borderRadius: "5px",
-          position: "sticky",
-          top: ".5em",
-          height: "calc(100vh - 1em)",
+          borderRight: "1px solid #ccc",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: "25%",
           overflowY: "auto",
+          backgroundColor: "#fff",
         }}
       >
         <Sidebar />
       </Box>
 
+      {/* Main Content */}
       <Box
         sx={{
-          flex: "70%",
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 1,
+          gridColumn: { sm: 2 },
+          backgroundColor: "#fff",
+          minHeight: "100vh",
+          overflowY: "auto",
         }}
       >
-        <Box
-          sx={{
-            flex: { xs: "100%", sm: "60%" },
-            borderRadius: "5px",
-            backgroundColor: "background.default",
-          }}
-        >
-          {/* This is where child pages render */}
-          <Outlet />
-        </Box>
+        <Outlet />
       </Box>
+
+      {/* Right Sidebar */}
       <Box
         sx={{
-          flex: "40%",
           display: { xs: "none", sm: "block" },
-          border: "2px solid #d0d0d0",
-          borderRadius: "5px",
-          backgroundColor: "#fff",
-          position: "sticky",
-          top: ".5em",
-          height: "calc(100vh - 1em)",
+          borderLeft: "1px solid #ccc",
+          position: "fixed",
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: "25%",
           overflowY: "auto",
+          backgroundColor: "#fff",
         }}
       >
         <InfoSidebar />

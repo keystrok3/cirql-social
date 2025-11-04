@@ -14,6 +14,7 @@ const Feed = () => {
           console.error("Could not fetch:", response.statusText);
           return;
         }
+        console.log(response.data.data)
         setPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching:", error);

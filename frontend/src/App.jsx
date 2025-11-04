@@ -9,6 +9,7 @@ import Profilepage from './pages/ProfilePage/Profilepage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import EditProfile from './pages/ProfilePage/EditProfile.jsx';
 import MainLayout from './pages/Homepage/MainLayout.jsx';
+import PostPage from './pages/Postpage/Postpage.jsx';
 
 const App = () => {
   return (
@@ -26,6 +27,8 @@ const App = () => {
               <Route index element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/profile" element={<Profilepage />} />
+              <Route path="/post/:post_id" element={<PostPage />} />
+              <Route path="/post/:post_id" element={<PostPage />} />
               <Route path="/edit-profile" element={<EditProfile />} />
             </Route>
           </Route>

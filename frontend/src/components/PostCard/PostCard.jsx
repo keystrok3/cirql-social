@@ -1,11 +1,12 @@
-import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 import {
-  Card,
   Avatar,
   IconButton,
   Typography,
   Box,
   useTheme,
+  Divider,
 } from "@mui/material";
 import {
   Favorite,
@@ -18,29 +19,20 @@ import usePostLikes from "../../hooks/usePostLikes";
 import useReposts from "../../hooks/useReposts";
 import useComments from "../../hooks/useComments";
 
-const PostCard = ({
-  post_id,
-  profilePic,
-  username,
-  screen_name,
-  timePosted,
-  text,
-  image,
-}) => {
+const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
   const { likesCount, currentUserLikes, likePost, unlikePost } = usePostLikes(post_id);
-  const { repostCount, reposted, make_repost, undo_repost } = useReposts(post_id)
+  const { repostCount, reposted, make_repost, undo_repost } = useReposts(post_id);
   const { commentCount } = useComments(post_id);
 
   const theme = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLike = async () => {
     try {
-      if (currentUserLikes) {
-        await unlikePost();
-      } else {
-        await likePost();
-      }
+      if (currentUserLikes) await unlikePost();
+      else await likePost();
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -48,44 +40,50 @@ const PostCard = ({
 
   const handleRepost = async () => {
     try {
-      if(reposted) {
-        await undo_repost();
-      } else {
-        await make_repost();
-      }
+      if (reposted) await undo_repost();
+      else await make_repost();
     } catch (error) {
       console.error("Error toggling repost:", error);
     }
-  } 
+  };
 
-  // const handleComment = () => setCommentCount(commentCount + 1);
+  const handleCommentClick = () => {
+    const currentPath = location.pathname;
+    let postData = { 
+      post_id: post_id, 
+      profile_photo: profilePic, 
+      username: username, 
+      screen_name: screen_name, 
+      createdAt: timePosted, 
+      text: text, 
+      image: image 
+    }
+     
+    // Only navigate if not already on this post's page
+    if (currentPath !== `/post/${post_id}`) {
+        return navigate(`/post/${post_id}`, { state: { ...postData } });
+
+    }
+  };
+
 
   return (
-    <Card
+    <Box
       sx={{
-        margin: "20px auto",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        borderRadius: 2,
+        // margin: "20px auto",
         p: 2,
       }}
     >
-      {/* TOP SECTION */}
       <Box sx={{ display: "flex", gap: 2 }}>
-        {/* Avatar */}
         <Box sx={{ flexShrink: 0 }}>
           <Avatar
             src={profilePic ? `http://localhost:8000/${profilePic}` : null}
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              width: 48,
-              height: 48,
-            }}
+            sx={{ bgcolor: theme.palette.primary.main, width: 48, height: 48 }}
           >
             {!profilePic && username?.charAt(0).toUpperCase()}
           </Avatar>
         </Box>
 
-        {/* Post content */}
         <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -100,14 +98,11 @@ const PostCard = ({
           </Box>
 
           {text && (
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{ whiteSpace: "pre-line" }}
-            >
+            <Typography variant="body1" color="text.primary" sx={{ whiteSpace: "pre-line" }}>
               {text}
             </Typography>
           )}
+
           {image && (
             <Box
               component="img"
@@ -126,22 +121,10 @@ const PostCard = ({
       </Box>
 
       {/* ACTION BAR */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          mt: 2,
-          pt: 1,
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "space-around", alignItems: "center", mt: 2, pt: 1 }}>
         {/* Like */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton
-            onClick={handleLike}
-            color={currentUserLikes ? "error" : "default"}
-            size="small"
-          >
+          <IconButton onClick={handleLike} color={currentUserLikes ? "error" : "default"} size="small">
             {currentUserLikes ? <Favorite /> : <FavoriteBorder />}
           </IconButton>
           {likesCount > 0 && (
@@ -165,7 +148,7 @@ const PostCard = ({
 
         {/* Comment */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton color="default" size="small">
+          <IconButton onClick={handleCommentClick} color="default" size="small">
             <ChatBubbleOutline />
           </IconButton>
           {commentCount > 0 && (
@@ -175,7 +158,8 @@ const PostCard = ({
           )}
         </Box>
       </Box>
-    </Card>
+
+    </Box>
   );
 };
 

@@ -1,11 +1,13 @@
 const Post = require("../models/post");
 const Comment = require("../models/comments");
+const User = require("../models/user");
 
 const create_comment = async (req, res, next) => {
+    const { username } = req.user;
+    const { post_id } = req.params;
+    const { content } = req.body;
+
     try {
-        const { username } = req.user;
-        const { post_id } = req.param;
-        const { content } = req.body;
 
         // find post
         const post = await Post.findByPk(post_id);
@@ -28,6 +30,41 @@ const create_comment = async (req, res, next) => {
     }
 };
 
+const fetch_post_comments = async (req, res, next) => {
+    const { post_id } = req.params;
+
+    try {
+        // find post
+        const post = await Post.findByPk(post_id);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        const comments = await Comment.findAll({ 
+            where: {
+                post_id: post_id
+            }, 
+            include: [
+                {
+                    model: User,
+                    attributes: [ 'username', 'screen_name', 'profile_photo' ]
+                }
+            ]
+        });
+
+        const flattened_comments = comments.map(comment => {
+            const { User: userData, ...rest } = comment.toJSON();
+
+            return {
+                ...rest,
+                ...userData
+            }
+        })
+
+        res.status(200).json({ comments: [ ...flattened_comments ] });
+    } catch (error) {
+        console.error('Error fetching comments: ', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+}
 
 const fetch_comment_count = async (req, res, next) => {
     try {
@@ -48,4 +85,4 @@ const fetch_comment_count = async (req, res, next) => {
     }
 };
 
-module.exports = { create_comment, fetch_comment_count };
+module.exports = { create_comment, fetch_comment_count, fetch_post_comments };
