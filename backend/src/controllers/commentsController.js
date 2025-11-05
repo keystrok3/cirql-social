@@ -2,87 +2,75 @@ const Post = require("../models/post");
 const Comment = require("../models/comments");
 const User = require("../models/user");
 
-const create_comment = async (req, res, next) => {
+// 1. Import catchAsync and custom errors
+const catchAsync = require('../utils/catchAsync'); 
+const { NotFoundError } = require('../utils/errorResponse'); // Adjust path as needed
+
+
+const create_comment = catchAsync(async (req, res, next) => { // Wrapped
     const { username } = req.user;
     const { post_id } = req.params;
     const { content } = req.body;
 
-    try {
+    // find post
+    const post = await Post.findByPk(post_id);
+    if (!post) throw new NotFoundError("Post");
 
-        // find post
-        const post = await Post.findByPk(post_id);
-        if (!post) return res.status(404).json({ message: "Post not found" });
+    // create post
+    await Comment.create({
+        user: username,
+        post_id: post_id,
+        content: content
+    });
 
-        // create post
-        await Comment.create({
-            user: username,
-            post_id: post_id,
-            content: content
-        });
+    console.log('Comment posted');
 
-        console.log('Comment posted');
+    return res.status(201).json({ message: "Comment created" });
+}); // Removed try...catch
 
-        return res.status(201).json({ message: "Comment created" });
 
-    } catch (error) {
-        console.log('Error posting comment: ', error);
-        return res.status(500).json({ message: "Server Error" });
-    }
-};
-
-const fetch_post_comments = async (req, res, next) => {
+const fetch_post_comments = catchAsync(async (req, res, next) => { // Wrapped
     const { post_id } = req.params;
 
-    try {
-        // find post
-        const post = await Post.findByPk(post_id);
-        if (!post) return res.status(404).json({ message: "Post not found" });
+    // find post
+    const post = await Post.findByPk(post_id);
+    if (!post) throw new NotFoundError("Post");
 
-        const comments = await Comment.findAll({ 
-            where: {
-                post_id: post_id
-            }, 
-            include: [
-                {
-                    model: User,
-                    attributes: [ 'username', 'screen_name', 'profile_photo' ]
-                }
-            ]
-        });
-
-        const flattened_comments = comments.map(comment => {
-            const { User: userData, ...rest } = comment.toJSON();
-
-            return {
-                ...rest,
-                ...userData
+    const comments = await Comment.findAll({ 
+        where: {
+            post_id: post_id
+        }, 
+        include: [
+            {
+                model: User,
+                attributes: [ 'username', 'screen_name', 'profile_photo' ]
             }
-        })
+        ]
+    });
 
-        res.status(200).json({ comments: [ ...flattened_comments ] });
-    } catch (error) {
-        console.error('Error fetching comments: ', error);
-        res.status(500).json({ message: 'Server Error' });
-    }
-}
+    const flattened_comments = comments.map(comment => {
+        const { User: userData, ...rest } = comment.toJSON();
 
-const fetch_comment_count = async (req, res, next) => {
-    try {
-        const { post_id } = req.params;
+        return {
+            ...rest,
+            ...userData
+        }
+    })
 
-        // find post
-        const post = await Post.findByPk(post_id);
-        if (!post) return res.status(404).json({ message: "Post not found" });
+    res.status(200).json({ comments: [ ...flattened_comments ] });
+}); // Removed try...catch
 
-        // fetch comment count
-        const comment_count = await Comment.count({ where: { post_id: post_id }});
-        
-        return res.status(200).json({ post_id, comments: comment_count });
+const fetch_comment_count = catchAsync(async (req, res, next) => { // Wrapped
+    const { post_id } = req.params;
 
-    } catch (error) {
-        console.error("Error fetch comment count: ", error);
-        return res.status(500).json({ message: "Server Error"})
-    }
-};
+    // find post
+    const post = await Post.findByPk(post_id);
+    if (!post) throw new NotFoundError("Post");
+
+    // fetch comment count
+    const comment_count = await Comment.count({ where: { post_id: post_id }});
+    
+    return res.status(200).json({ post_id, comments: comment_count });
+}); // Removed try...catch
 
 module.exports = { create_comment, fetch_comment_count, fetch_post_comments };

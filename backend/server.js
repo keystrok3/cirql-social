@@ -8,6 +8,7 @@ const express = require('express');
 
 const { init } = require('./src/config/database');
 const { sync_tables } = require('./src/models');
+const errorHandler = require('./src/middleware/errorHandler.js');
 
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/api/posts', require('./src/routes/postsRoute.js'));
 app.use('/api/likes', require('./src/routes/likesRoute.js'));
 app.use('/api/reposts', require('./src/routes/repostRoute.js'));
 app.use('/api/comments', require('./src/routes/commentRoute.js'));
+app.use(errorHandler)
 
 
 

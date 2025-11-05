@@ -1,97 +1,80 @@
 const Post = require("../models/post");
 const Repost = require("../models/repost");
 
+// 1. Import catchAsync and custom errors
+const catchAsync = require('../utils/catchAsync'); 
+const { NotFoundError } = require('../utils/errorResponse'); // Adjust path as needed
 
-const make_repost = async (req, res, next) => {
-    try {
-        const { post_id } = req.params;
-        const { username } = req.user;
 
-        // find post
-        const post = await Post.findByPk(post_id);
+const make_repost = catchAsync(async (req, res, next) => { // Wrapped
+    const { post_id } = req.params;
+    const { username } = req.user;
 
-        if(!post) {
-            return res.status(404).json({ message: "Post doesn't exist" });
-        }
+    // find post
+    const post = await Post.findByPk(post_id);
 
-        // create repost
-        await Repost.create({
-            post: post_id,
-            user: username
-        });
-
-        return res.status(201).json({ message: "Reposted" });
-    } catch (error) {
-        console.error('Error reposting: ', error);
-        res.status(500).json({ message: "Unexpected Error Reposting"})
+    if(!post) {
+        throw new NotFoundError("Post");
     }
-};
+
+    // create repost
+    await Repost.create({
+        post: post_id,
+        user: username
+    });
+
+    return res.status(201).json({ message: "Reposted" });
+}); // Removed try...catch
 
 
-const undo_repost = async (req, res, next) => {
-    try {
-        const { post_id } = req.params;
-        const { username } = req.user;
+const undo_repost = catchAsync(async (req, res, next) => { // Wrapped
+    const { post_id } = req.params;
+    const { username } = req.user;
 
-        // find repost
-        const repost = await Repost.findOne({
-            where: { post: post_id, user: username }
-        });
+    // find repost
+    const repost = await Repost.findOne({
+        where: { post: post_id, user: username }
+    });
 
-        if (!repost) {
-            return res.status(404).json({ message: "Repost not found" });
-        }
-
-        // delete repost
-        await repost.destroy();
-
-        return res.status(200).json({ message: "Repost undone" });
-    } catch (error) {
-        console.error("Error undoing repost:", error);
-        res.status(500).json({ message: "Unexpected Error Undoing Repost" });
+    if (!repost) {
+        throw new NotFoundError("Repost");
     }
-};
+
+    // delete repost
+    await repost.destroy();
+
+    return res.status(200).json({ message: "Repost undone" });
+}); // Removed try...catch
 
 
+const check_user_repost = catchAsync(async (req, res, next) => { // Wrapped
+    const { post_id } = req.params;
+    const { username } = req.user;
 
-const check_user_repost = async (req, res, next) => {
-    try {
-        const { post_id } = req.params;
-        const { username } = req.user;
+    // find post
+    const post = await Post.findByPk(post_id);
 
-        // find post
-        const post = await Post.findByPk(post_id);
-
-        if(!post) {
-            return res.status(404).json({ message: "Post doesn't exist" });
-        }
-
-        const has_reposted = await Repost.findOne({ where: { user: username, post: post_id }});
-
-        return res.status(200).json({ reposted: !!has_reposted });
-    } catch (error) {
-        console.error('Error reposting: ', error);
-        res.status(500).json({ message: "Unexpected Error Reposting" });
+    if(!post) {
+        throw new NotFoundError("Post");
     }
-};
 
-const get_repost_count = async (req, res, next) => {
-    try {
-        const { post_id } = req.params;
+    const has_reposted = await Repost.findOne({ where: { user: username, post: post_id }});
 
-        const post = await Post.findByPk(post_id);
-        if (!post) {
-            return res.status(404).json({ message: "Post doesn't exist" });
-        }
+    return res.status(200).json({ reposted: !!has_reposted });
+}); // Removed try...catch
 
-        const count = await Repost.count({ where: { post: post_id } });
+const get_repost_count = catchAsync(async (req, res, next) => { // Wrapped
+    const { post_id } = req.params;
 
-        return res.status(200).json({ repost_count: count });
-    } catch (error) {
-        console.error("Error getting repost count:", error);
-        res.status(500).json({ message: "Unexpected Error Getting Repost Count" });
+    const post = await Post.findByPk(post_id);
+    if (!post) {
+        throw new NotFoundError("Post");
     }
-};
+
+    const count = await Repost.count({ where: { post: post_id } });
+
+    return res.status(200).json({ repost_count: count });
+}); // Removed try...catch
 
 
 module.exports = { make_repost, undo_repost, check_user_repost, get_repost_count };
