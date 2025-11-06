@@ -31,42 +31,33 @@ const usePostLikes = (post_id) => {
         }
     };
 
-    const likePost = async () => {
+    const toggleLike = async () => {
         try {
-            const response = await apiAuth.post(`/likes/${post_id}/like-post`);
+            const response = await apiAuth.post(`/likes/${post_id}/toggle-like`);
+
+            // Like created
             if (response.status === 201) {
                 setCurrentUserLikes(true);
                 setLikesCount(prev => prev + 1);
-            } else {
-                console.log("Error liking post:", response.statusText);
             }
-        } catch (error) {
-            console.error("Error liking post:", error);
-        }
-    };
 
-    const unlikePost = async () => {
-        try {
-            const response = await apiAuth.post(`/likes/${post_id}/unlike-post`);
-            if (response.status === 201) {
+            // Like removed
+            if (response.status === 200) {
                 setCurrentUserLikes(false);
                 setLikesCount(prev => Math.max(prev - 1, 0));
-            } else {
-                console.log("Error unliking post:", response.statusText);
             }
+
         } catch (error) {
-            console.error("Error unliking post:", error);
+            console.error("Error toggling like:", error);
         }
     };
 
     useEffect(() => {
-        // if (post_id) {
         hasUserLiked();
         fetchLikesCount();
-        // }
     }, [post_id]);
 
-    return { likesCount, currentUserLikes, likePost, unlikePost };
+    return { likesCount, currentUserLikes, toggleLike };
 };
 
 export default usePostLikes;

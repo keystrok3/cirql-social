@@ -14,6 +14,7 @@ import {
   Repeat,
   ChatBubbleOutline,
 } from "@mui/icons-material";
+
 import { elapsed_time } from "../../utils/elapsed_time";
 import usePostLikes from "../../hooks/usePostLikes";
 import useReposts from "../../hooks/useReposts";
@@ -21,8 +22,8 @@ import useComments from "../../hooks/useComments";
 
 const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
-  const { likesCount, currentUserLikes, likePost, unlikePost } = usePostLikes(post_id);
-  const { repostCount, reposted, make_repost, undo_repost } = useReposts(post_id);
+  const { likesCount, currentUserLikes, toggleLike } = usePostLikes(post_id);
+  const { repostCount, reposted, toggleRepost } = useReposts(post_id);
   const { commentCount } = useComments(post_id);
 
   const theme = useTheme();
@@ -31,8 +32,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
 
   const handleLike = async () => {
     try {
-      if (currentUserLikes) await unlikePost();
-      else await likePost();
+      await toggleLike()
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -40,8 +40,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
 
   const handleRepost = async () => {
     try {
-      if (reposted) await undo_repost();
-      else await make_repost();
+      await toggleRepost()
     } catch (error) {
       console.error("Error toggling repost:", error);
     }
@@ -127,37 +126,47 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
           <IconButton onClick={handleLike} color={currentUserLikes ? "error" : "default"} size="small">
             {currentUserLikes ? <Favorite /> : <FavoriteBorder />}
           </IconButton>
-          {likesCount > 0 && (
-            <Typography variant="body2" color="text.secondary">
-              {likesCount}
-            </Typography>
-          )}
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ visibility: likesCount > 0 ? "visible" : "hidden" }}
+          >
+            {likesCount || 0}
+          </Typography>
         </Box>
 
         {/* Repost */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton onClick={handleRepost} color="default" size="small">
-            <Repeat />
+          <IconButton onClick={handleRepost} size="small">
+            {reposted ? <Repeat sx={{ color: "primary.main" }} /> : <Repeat />}
           </IconButton>
-          {reposted && (
-            <Typography variant="body2" color="text.secondary">
-              {repostCount}
-            </Typography>
-          )}
+
+          <Typography
+            variant="body2"
+            color={reposted ? "primary.main" : "text.primary"}
+            sx={{ visibility: repostCount > 0 ? "visible" : "hidden" }}
+          >
+            {repostCount || 0}
+          </Typography>
         </Box>
 
         {/* Comment */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton onClick={handleCommentClick} color="default" size="small">
+          <IconButton onClick={handleCommentClick} size="small">
             <ChatBubbleOutline />
           </IconButton>
-          {commentCount > 0 && (
-            <Typography variant="body2" color="text.secondary">
-              {commentCount}
-            </Typography>
-          )}
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ visibility: commentCount > 0 ? "visible" : "hidden" }}
+          >
+            {commentCount || 0}
+          </Typography>
         </Box>
       </Box>
+
 
     </Box>
   );

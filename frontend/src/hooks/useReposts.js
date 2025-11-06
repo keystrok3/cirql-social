@@ -29,27 +29,24 @@ const useReposts = (post_id) => {
         }
     };
 
-    const make_repost = async () => {
+    const toggleRepost = async () => {
         try {
-            const response = await apiAuth.post(`/reposts/${post_id}/repost`);
+            const response = await apiAuth.post(`/reposts/${post_id}/toggle-repost`);
+
+            // Repost created
             if (response.status === 201) {
                 setReposted(true);
-                setRepostCount((prev) => prev + 1);
+                setRepostCount(prev => prev + 1);
             }
-        } catch (error) {
-            console.error("Error making repost:", error);
-        }
-    };
 
-    const undo_repost = async () => {
-        try {
-            const response = await apiAuth.post(`/reposts/${post_id}/undo-repost`);
+            // Repost removed
             if (response.status === 200) {
                 setReposted(false);
-                setRepostCount((prev) => Math.max(prev - 1, 0));
+                setRepostCount(prev => Math.max(prev - 1, 0));
             }
+
         } catch (error) {
-            console.error("Error undoing repost:", error);
+            console.error("Error toggling repost:", error);
         }
     };
 
@@ -58,7 +55,7 @@ const useReposts = (post_id) => {
         check_reposted();
     }, [post_id]);
 
-    return { repostCount, reposted, make_repost, undo_repost };
+    return { repostCount, reposted, toggleRepost };
 };
 
 export default useReposts;
