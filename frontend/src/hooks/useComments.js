@@ -14,7 +14,6 @@ const useComments = (post_id) => {
             if (response.status !== 200) {
                 console.log('Error fetching comments: ', response.statusText);
             }
-            console.log('Comments: ', response.data.comments);
             setComments(response.data.comments || []);
         } catch (error) {
             console.error('Error fetching comments: ', error);
@@ -23,11 +22,9 @@ const useComments = (post_id) => {
 
     const fetchCommentCount = useCallback(async () => {
         try {
-            console.log('Fetching comments count for: ', post_id);
             const response = await apiAuth.get(`/comments/${post_id}/fetch-comment-count`);
 
             if (response.status === 200) {
-                console.log('Comment count: ', response.data.comments);
                 setCommentCount(response.data.comments);
             }
         } catch (error) {
@@ -49,7 +46,6 @@ const useComments = (post_id) => {
                 
                 fetchComments();
             } else {
-                 console.log('Comment not created: ', response.statusText);
                  setError(true);
                  setMessage(response.statusText);
             }

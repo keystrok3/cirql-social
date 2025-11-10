@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import React, { useEffect } from "react";
 import {
   Avatar,
   IconButton,
@@ -30,7 +29,8 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLike = async () => {
+  const handleLike = async (e) => {
+    e.stopPropagation();
     try {
       await toggleLike()
     } catch (error) {
@@ -38,7 +38,8 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
     }
   };
 
-  const handleRepost = async () => {
+  const handleRepost = async (e) => {
+    e.stopPropagation();
     try {
       await toggleRepost()
     } catch (error) {
@@ -46,7 +47,8 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
     }
   };
 
-  const handleCommentClick = () => {
+  const handleCommentClick = (e) => {
+    e.stopPropagation();
     const currentPath = location.pathname;
     let postData = { 
       post_id: post_id, 
@@ -68,12 +70,20 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
 
   return (
     <Box
+      onClick={handleCommentClick}
       sx={{
-        // margin: "20px auto",
-        p: 2,
+        '&:hover': {
+          backgroundColor: '#f3f3f3',
+          transitionProperty: 'background-color',
+          transitionDuration: '0.5s',
+          cursor: 'pointer'
+        }
       }}
     >
-      <Box sx={{ display: "flex", gap: 2 }}>
+
+      <Divider />
+
+      <Box sx={{ display: "flex", gap: 2, p: 2 }}>
         <Box sx={{ flexShrink: 0 }}>
           <Avatar
             src={profilePic ? `http://localhost:8000/${profilePic}` : null}
@@ -153,7 +163,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
 
         {/* Comment */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <IconButton onClick={handleCommentClick} size="small">
+          <IconButton size="small">
             <ChatBubbleOutline />
           </IconButton>
 

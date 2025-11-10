@@ -44,6 +44,18 @@ const AuthProvider = ({ children }) => {
         return null;
     });
 
+    const [ isAuthenticated, setIsAuthenticated ] = useState(() => {
+        try {
+            const isAuthenticated = localStorage.getItem('isAuthenticated');
+
+            if(isAuthenticated) {
+                return isAuthenticated
+            }
+        } catch (error) {
+            console.error("Failed to fetch data from localStorage");
+        }
+    });
+
 
     // Clear token from localStorage
     const clearAuth = useCallback(() => {
@@ -79,11 +91,16 @@ const AuthProvider = ({ children }) => {
 
                 localStorage.setItem('access_token', response.data.token);
 
+                localStorage.setItem('isAuthenticated', "true");
+
+                setIsAuthenticated("true");
+
                 setAccessToken(response.data.token);
 
                 setSuccessMessage("Login successful! Redirecting...");
 
                 setTimeout(() => navigate('/home'), 1500);
+
 
             } else {
                 console.warn('Unexpected response during login: ', response);
@@ -101,7 +118,6 @@ const AuthProvider = ({ children }) => {
     const logout = async () => {
         try {
             const response = await apiAuth.post('/auth/logout/', {}, { withCredentials: true });
-            console.log(response)
             if(response.status === 200) {
                 navigate('/login');
             }
@@ -116,7 +132,6 @@ const AuthProvider = ({ children }) => {
     const fetch_profile = async () => {
         try {
             const profile = await apiAuth.get('/profile/fetch_profile/');
-            console.log('fetch response: ', profile.data.user)
 
             localStorage.setItem('user', JSON.stringify(profile.data.user));
             setUserData(profile.data);
@@ -161,7 +176,8 @@ const AuthProvider = ({ children }) => {
                 logout, 
                 fetch_profile,
                 accessToken,
-                verifyAuth
+                verifyAuth,
+                isAuthenticated
             }}
         >{children}</AuthContext.Provider>
     )

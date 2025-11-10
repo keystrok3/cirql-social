@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
   Box,
   TextField,
   Button,
@@ -14,7 +12,6 @@ import {
 } from "@mui/material";
 
 import { Image as ImageIcon, Send as SendIcon, Close as CloseIcon } from "@mui/icons-material";
-
 import { apiAuth } from '../../api/axios';
 
 export default function PostComposer() {
@@ -66,11 +63,11 @@ export default function PostComposer() {
     }
 
     try {
-      const response = await apiAuth.post('/posts/create-post', formData, {
+      await apiAuth.post('/posts/create-post', formData, {
         headers: { 
           'Content-Type': 'multipart/form-data'
         }
-      })
+      });
 
       setAlert({
         open: true,
@@ -78,7 +75,6 @@ export default function PostComposer() {
         message: "Your post has been published successfully!",
       });
 
-      // Reset form
       setContent("");
       setImages([]);
     } catch (error) {
@@ -96,166 +92,129 @@ export default function PostComposer() {
 
   return (
     <>
-      <Card
+      {/* ✅ Plain social-media composer container */}
+      <Box
         sx={{
           width: "100%",
-          // maxWidth: 700,
-          borderRadius: 3,
-          boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-          transition: "box-shadow 0.3s",
-          "&:hover": {
-            boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-          },
+          p: 2,
+          borderBottom: "1px solid",
+          borderColor: "divider",
+          backgroundColor: "background.paper",
         }}
       >
-        <CardContent sx={{ p: 3 }}>
-          {/* Textarea section */}
-          <TextField
-            placeholder="What's on your mind?"
-            multiline
-            minRows={3}
-            fullWidth
-            variant="outlined"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                fontSize: "1rem",
-                "&:hover fieldset": {
-                  borderColor: "primary.main",
-                },
-                "&.Mui-focused fieldset": {
-                  borderWidth: 2,
-                },
-              },
-            }}
-          />
+        {/* Text Input */}
+        <TextField
+          placeholder="What's on your mind?"
+          multiline
+          minRows={3}
+          fullWidth
+          variant="standard"
+          InputProps={{
+            disableUnderline: true,
+            sx: {
+              fontSize: "1rem",
+            },
+          }}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
 
-          {/* Image Previews */}
-          {images.length > 0 && (
-            <Box sx={{ mt: 2 }}>
-              <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
-                {images.map((img) => (
-                  <Box
-                    key={img.id}
+        {/* Image Previews */}
+        {images.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
+              {images.map((img) => (
+                <Box
+                  key={img.id}
+                  sx={{
+                    position: "relative",
+                    width: images.length === 1 ? "100%" : 150,
+                    height: 150,
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    border: "1px solid",
+                    borderColor: "divider",
+                  }}
+                >
+                  <img
+                    src={img.preview}
+                    alt="Preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <IconButton
+                    size="small"
+                    onClick={() => removeImage(img.id)}
                     sx={{
-                      position: "relative",
-                      width: images.length === 1 ? "100%" : 150,
-                      height: 150,
-                      borderRadius: 2,
-                      overflow: "hidden",
-                      border: "2px solid",
-                      borderColor: "divider",
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      bgcolor: "rgba(0,0,0,0.6)",
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: "rgba(0,0,0,0.8)",
+                      },
                     }}
                   >
-                    <img
-                      src={img.preview}
-                      alt="Preview"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <IconButton
-                      size="small"
-                      onClick={() => removeImage(img.id)}
-                      sx={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        bgcolor: "rgba(0,0,0,0.6)",
-                        color: "white",
-                        "&:hover": {
-                          bgcolor: "rgba(0,0,0,0.8)",
-                        },
-                      }}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          )}
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              ))}
+            </Stack>
+          </Box>
+        )}
 
-          <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 2 }} />
 
-          {/* Bottom row */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Button
-                variant="outlined"
-                startIcon={<ImageIcon />}
-                component="label"
-                disabled={images.length >= 4}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                  fontWeight: 500,
-                }}
-              >
-                Add Image
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  multiple
-                  onChange={handleImageUpload}
-                />
-              </Button>
-              {images.length > 0 && (
-                <Chip
-                  label={`${images.length}/4`}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                />
-              )}
-            </Box>
-
+        {/* Bottom Row */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handlePost}
+              variant="text"
+              startIcon={<ImageIcon />}
+              component="label"
+              disabled={images.length >= 4}
               sx={{
-                borderRadius: 2,
                 textTransform: "none",
                 fontWeight: 500,
-                px: 3,
-                py: 1,
-                boxShadow: 2,
-                "&:hover": {
-                  boxShadow: 4,
-                },
               }}
             >
-              Post
+              Add Image
+              <input hidden accept="image/*" type="file" multiple onChange={handleImageUpload} />
             </Button>
-          </Box>
-        </CardContent>
-      </Card>
 
-      {/* Alert Snackbar */}
+            {images.length > 0 && (
+              <Chip label={`${images.length}/4`} size="small" />
+            )}
+          </Box>
+
+          <Button
+            variant="contained"
+            endIcon={<SendIcon />}
+            onClick={handlePost}
+            sx={{
+              textTransform: "none",
+              fontWeight: 500,
+              px: 3,
+              py: 1,
+            }}
+          >
+            Post
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Snackbar */}
       <Snackbar
         open={alert.open}
         autoHideDuration={4000}
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          onClose={handleCloseAlert}
-          severity={alert.type}
-          variant="filled"
-          sx={{ width: "100%", borderRadius: 2 }}
-        >
+        <Alert onClose={handleCloseAlert} severity={alert.type} variant="filled" sx={{ width: "100%" }}>
           {alert.message}
         </Alert>
       </Snackbar>
