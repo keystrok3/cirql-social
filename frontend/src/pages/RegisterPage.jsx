@@ -3,6 +3,7 @@ import Container from '@mui/material/Container';
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RegisterPage = () => {
 

@@ -15,9 +15,9 @@ import {
 } from "@mui/icons-material";
 
 import { elapsed_time } from "../../utils/elapsed_time";
-import usePostLikes from "../../hooks/usePostLikes";
 import useReposts from "../../hooks/useReposts";
 import useComments from "../../hooks/useComments";
+import usePostLikes from "../../hooks/usePostlikes";
 
 const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
