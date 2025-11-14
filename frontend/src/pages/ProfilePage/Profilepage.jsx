@@ -104,10 +104,10 @@ const ProfilePage = () => {
           <Box sx={{ marginTop: { xs: "1.5em", sm: "2.5em" } }}>
             <Stack gap={0.5}>
               <Typography variant="h5" component="h1">
-                {user?.full_name || "Unnamed User"}
+                { user?.screen_name || `${user?.first_name} ${user?.last_name}` || "Unnamed User"}
               </Typography>
               <Typography color="#6b6b6b" variant="body2">
-                @{user?.screen_name || "unknown"}
+                @{user?.username || "unknown"}
               </Typography>
               <Typography color="#6b6b6b" variant="body1">
                 {user?.bio || "No bio provided"}
