@@ -5,6 +5,7 @@ const User = require("../models/user");
 // 1. Import catchAsync and custom errors
 const catchAsync = require('../utils/catchAsync'); 
 const { NotFoundError } = require('../utils/errorResponse'); // Adjust path as needed
+const notificationEvents = require("../events/notificationEvent");
 
 
 const create_comment = catchAsync(async (req, res, next) => { // Wrapped
@@ -17,16 +18,25 @@ const create_comment = catchAsync(async (req, res, next) => { // Wrapped
     if (!post) throw new NotFoundError("Post");
 
     // create post
-    await Comment.create({
+    const comment = await Comment.create({
         user: username,
         post_id: post_id,
         content: content
     });
 
-    console.log('Comment posted');
+    console.log(`Comment posted ${comment.content} by user: ${comment.user}`, );
+
+    if(post.user !== comment.user) {
+        console.log('event triggered')
+        notificationEvents.emit("post.commented", {
+            receiver: post.user,
+            actor: username,
+            commentId: comment.comment_id
+        })
+    }
 
     return res.status(201).json({ message: "Comment created" });
-}); // Removed try...catch
+});
 
 
 const fetch_post_comments = catchAsync(async (req, res, next) => { // Wrapped

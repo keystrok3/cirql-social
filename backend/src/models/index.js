@@ -8,6 +8,7 @@ const Repost = require("./repost.js");
 const Post = require("./post.js");
 const User = require("./user.js");
 const Comment = require("./comments.js");
+const Notification = require("./notifications.js");
 
 const sync_tables = async () => {
 
@@ -71,6 +72,30 @@ const sync_tables = async () => {
     User.hasMany(Comment, { foreignKey: 'user' });
     Comment.belongsTo(User, { foreignKey: 'user' });
 
+    Notification.belongsTo(Post, {
+        foreignKey: 'source_id',
+        as: 'repostSource',
+        constraints: false // disable fk check in db
+    });
+
+    Notification.belongsTo(Comment, {
+        foreignKey: 'source_id',
+        as: 'commentSource',
+        constraints: false
+    });
+
+    Notification.belongsTo(PostLike, {
+        foreignKey: 'source_id',
+        as: 'likeSource',
+        constraints: false
+    });
+
+    Notification.belongsTo(Follows, {
+        foreignKey: 'source_id',
+        as: 'followSource',
+        constraints: false
+    });
+
     try {
         await User.sync();
         console.log(`Table accounts created`);
@@ -98,6 +123,9 @@ const sync_tables = async () => {
 
         await Comment.sync()
         console.log("Table comments created")
+
+        await Notification.sync();
+        console.log("Table notifications created")
         
     } catch (error) {
         console.error(`Error syncing tables: ${e}`);

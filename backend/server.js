@@ -1,5 +1,9 @@
 
 require('dotenv').config({ path: './.env'});
+
+const http = require('http');
+const { initSocket } = require('./src/socket/socket.js');
+
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -13,6 +17,8 @@ const errorHandler = require('./src/middleware/errorHandler.js');
 
 const app = express();
 
+const server = http.createServer(app);
+
 
 // Initialize database 
 init();
@@ -20,6 +26,7 @@ init();
 // sync tables
 sync_tables();
 
+require("./src/listeners/notificationListener.js");
 
 // Middleware
 app.use(cors({
@@ -41,8 +48,10 @@ app.use('/api/comments', require('./src/routes/commentRoute.js'));
 app.use(errorHandler)
 
 
+// Initialize WebSocket server
+initSocket(server);
 
-const server = app.listen(
+server.listen(
     process.env.PORT, 
     () => console.log(`Server listening at http://localhost:${process.env.PORT}`)
 );
