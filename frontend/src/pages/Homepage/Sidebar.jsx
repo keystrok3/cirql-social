@@ -91,7 +91,7 @@ const Sidebar = () => {
             <ListItemText primary="Search" />
           </ListItemButton>
 
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate('/notifications')}>
             <ListItemIcon>
               <Badge badgeContent={`${unread}`}>
                 <NotificationsIcon />

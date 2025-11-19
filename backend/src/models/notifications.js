@@ -17,7 +17,7 @@ class Notification extends Model {
             case 'Comment':
                 return this.getCommentSource(options);
             case 'Follow':
-                return this.getFollowSOurce(options);
+                return this.getFollowSource(options);
             case 'Repost':
                 return this.getRepostSource(options);
             default:
@@ -78,12 +78,14 @@ Notification.init({
                 } else if(instance.sourceType === 'Follow' && instance.followSource) {
                     instance.source = instance.followSource;
                 }
+
+                delete instance.repostSource;
+                delete instance.likeSource;
+                delete instance.commentSource;
+                delete instance.followSource;
             }
 
-            delete instance.postSource;
-            delete instance.likeSource;
-            delete instance.commentSource;
-            delete instance.followSource;
+            
         }
     }
 });

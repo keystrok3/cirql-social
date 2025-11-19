@@ -11,6 +11,7 @@ import MainLayout from './pages/Homepage/MainLayout.jsx';
 import PostPage from './pages/Postpage/Postpage.jsx';
 import NotificationProvider from './context/NotificationContext.jsx';
 import SocketProvider from './context/SocketProvider.jsx';
+import Notificationpage from './pages/Notificationspage/Notificationspage.jsx';
 
 const App = () => {
 
@@ -31,6 +32,7 @@ const App = () => {
                 <Route path="/profile" element={<Profilepage />} />
                 <Route path="/post/:post_id" element={<PostPage />} />
                 <Route path="/edit-profile" element={<EditProfile />} />
+                <Route path="/notifications" element={<Notificationpage />}/>
               </Route>
             </Route>
           </Routes>
