@@ -1,19 +1,21 @@
 
-
+```markdown
 # Cirql Social
 
-Cirql Social is a full-stack social media application built with Node.js for the backend and a modern frontend framework. It allows users to interact, share content, and stay connected in real-time.
+Cirql Social is a full-stack social media application with a Node.js backend and a modern frontend. Users can interact, share content, and stay connected in real-time.
 
 ---
 
 ## Project Structure
 
+```
 
 cirql-social/
 │
 ├── backend/    # Node.js backend
 └── frontend/   # Frontend application
 
+````
 
 ---
 
@@ -21,9 +23,9 @@ cirql-social/
 
 ### Prerequisites
 
-- Node.js (v16+ recommended)
+- Node.js (v16+)
 - npm
-- PostgreSQL (or compatible database)
+- PostgreSQL or a compatible database
 
 ---
 
@@ -41,18 +43,18 @@ cd backend
 npm install
 ```
 
-3. Create a `.env` file in the backend root with the following variables:
+3. Create a `.env` file with your database and JWT configuration (example variables shown below, **do not commit secrets**):
 
-```env
-DB_NAME=cirql_social_db
-DB_USER=josiah
-DB_PASSWORD=various
+```
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
 DB_HOST=localhost
 
 PORT=8000
 
-ACCESS_TOKEN_SECRET=aiudfbvauefbvaufbvaeurfvbaUFVAIfs
-REFRESH_TOKEN_SECRET=alsiudbvaksdjbvUSDVBSudvHSVDEVAI
+ACCESS_TOKEN_SECRET=your_access_token_secret
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
 ```
 
 4. Start the backend server:
@@ -61,7 +63,7 @@ REFRESH_TOKEN_SECRET=alsiudbvaksdjbvUSDVBSudvHSVDEVAI
 npm start
 ```
 
-The backend will run on `http://localhost:8000`.
+The backend runs on `http://localhost:8000` by default.
 
 ---
 
@@ -79,32 +81,30 @@ cd frontend
 npm install
 ```
 
-3. Start the frontend in development mode:
+3. Start the frontend:
 
 ```bash
 npm run dev
 ```
 
-The frontend will typically run on `http://localhost:5173` (or another port provided by your development server).
+The frontend runs on the development server (typically `http://localhost:5173`).
 
 ---
 
 ## Features
 
-* User authentication with JWT (access and refresh tokens)
-* Real-time notifications and interactions
+* User authentication with JWT
+* Real-time notifications
 * Social feed for posts, likes, and comments
-* Responsive frontend UI
+* Responsive UI
 
 ---
 
 ## Environment Variables
 
-The app requires the following `.env` variables for proper configuration:
-
 | Variable               | Description              |
 | ---------------------- | ------------------------ |
-| `DB_NAME`              | Name of your database    |
+| `DB_NAME`              | Database name            |
 | `DB_USER`              | Database username        |
 | `DB_PASSWORD`          | Database password        |
 | `DB_HOST`              | Database host            |
@@ -114,14 +114,14 @@ The app requires the following `.env` variables for proper configuration:
 
 ---
 
-## License
+## Notes
 
-This project is open-source and available under the MIT License.
+* Ensure your database is running before starting the backend.
+* Adjust ports if needed to avoid conflicts.
 
 ---
 
-## Notes
+## License
 
-* Make sure PostgreSQL is running locally and the database exists before starting the backend.
-* Adjust frontend and backend ports if needed to avoid conflicts.
+MIT License
 
