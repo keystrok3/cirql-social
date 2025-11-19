@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography, // Imported for username display
   useMediaQuery,
+  Badge,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FeedIcon from "@mui/icons-material/DynamicFeed";
@@ -18,11 +19,13 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
+import { useNotification } from "../../context/NotificationContext";
 
 const Sidebar = () => {
   const theme = useTheme();
-  // Using theme.breakpoints.up('sm') is often cleaner for desktop components
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const { unread } = useNotification();
 
   const { logout, userData } = useAuth();
 
@@ -90,7 +93,9 @@ const Sidebar = () => {
 
           <ListItemButton>
             <ListItemIcon>
-              <NotificationsIcon />
+              <Badge badgeContent={`${unread}`}>
+                <NotificationsIcon />
+              </Badge>
             </ListItemIcon>
             <ListItemText primary="Notifications" />
           </ListItemButton>
