@@ -1,5 +1,5 @@
 
-```markdown
+
 # Cirql Social
 
 Cirql Social is a full-stack social media application built with Node.js for the backend and a modern frontend framework. It allows users to interact, share content, and stay connected in real-time.
@@ -8,14 +8,12 @@ Cirql Social is a full-stack social media application built with Node.js for the
 
 ## Project Structure
 
-```
 
 cirql-social/
 │
 ├── backend/    # Node.js backend
 └── frontend/   # Frontend application
 
-````
 
 ---
 
@@ -127,9 +125,3 @@ This project is open-source and available under the MIT License.
 * Make sure PostgreSQL is running locally and the database exists before starting the backend.
 * Adjust frontend and backend ports if needed to avoid conflicts.
 
-```
-
----
-
-If you want, I can also add a **“Quick Start” one-command version** that launches both frontend and backend simultaneously for local development—this is great for devs testing the app quickly. Do you want me to add that?
-```
