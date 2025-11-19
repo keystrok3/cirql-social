@@ -39,8 +39,8 @@ function initSocket(server) {
     io.use((socket, next) => {
         try {
             // get token from query or from auth header
-            const token = socket.handshake.auth?.token || 
-                            socket.handshake.headers?.authorization?.split(" ")[1];
+            const token = socket.handshake.auth?.accessToken || 
+                          socket.handshake.headers?.authorization?.split(" ")[1];
             
             if(!token) {
                 console.log("Socket rejected, no token provided");

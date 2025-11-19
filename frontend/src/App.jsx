@@ -10,10 +10,12 @@ import EditProfile from './pages/ProfilePage/EditProfile.jsx';
 import MainLayout from './pages/Homepage/MainLayout.jsx';
 import PostPage from './pages/Postpage/Postpage.jsx';
 import NotificationProvider from './context/NotificationContext.jsx';
+import SocketProvider from './context/SocketProvider.jsx';
 
 const App = () => {
 
   return (
+      <SocketProvider>    
         <NotificationProvider>
           <Routes>
             {/* Public routes */}
@@ -33,6 +35,7 @@ const App = () => {
             </Route>
           </Routes>
         </NotificationProvider>
+    </SocketProvider>
   );
 };
 

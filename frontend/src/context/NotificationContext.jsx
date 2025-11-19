@@ -1,51 +1,38 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { createSocket } from "../socket";
 import { useAuth } from "./AuthProvider";
+import { useSocket } from "./SocketProvider";
 
 const NotificationContext = createContext();
 
 const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
     const [unread, setUnread] = useState(0);
-    const socketRef = useRef(null);
 
     const { accessToken } = useAuth();
+    const { socket } = useSocket();
 
     useEffect(() => {
-        if (!accessToken) return;
 
-        // Create socket
-        console.log("Creating socket with token:", accessToken);
-        const s = createSocket(accessToken);
-        socketRef.current = s;
+        if(!socket) return;
 
-        s.on("connect", () => {
-            console.log("WS connected:", s.id);
-        });
-
-        s.on("disconnect", () => {
-            console.log("WS disconnected");
-        });
-
-        // Real-time notifications
-        s.on("notification", (data) => {
-            console.log("Real-time notification:", data);
+        const handler = (data) => {
+            console.log("Real-time notification: ", data);
             setNotifications((prev) => [data, ...prev]);
             setUnread((prev) => prev + 1);
-        });
+        }
+
+        // Real-time notifications
+        socket.on("notification", handler);
 
         // Cleanup
         return () => {
-            console.log("Cleaning up socket...");
-            s.removeAllListeners(); // prevent duplicate handlers
-            s.disconnect();
+            socket.off("notification", handler);
         };
-    }, [accessToken]);
+    }, [ socket, accessToken ]);
 
     return (
         <NotificationContext.Provider
             value={{
-                socket: socketRef.current,
                 notifications,
                 unread,
                 setUnread,
