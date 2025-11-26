@@ -53,7 +53,7 @@ function initSocket(server) {
 
             next()
         } catch (error) {
-            console.log("JWT error in socket handshake:", error.message);
+            console.log("JWT error in socket handshake:", error);
             next(new Error("Authentication failed"));
         }
     });

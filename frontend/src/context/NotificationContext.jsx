@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { useSocket } from "./SocketProvider";
 import { apiAuth } from "../api/axios";
@@ -18,9 +18,30 @@ const NotificationProvider = ({ children }) => {
 
             console.log('Notifications: ', response.data.notifications);
 
+            const unread_notifications_count = response
+                                                .data
+                                                .notifications
+                                                .filter(notf => notf.is_read === false)
+                                                .length;
+
+            setUnread(unread_notifications_count);
             setNotifications([ ...response.data.notifications ]);
         } catch (error) {
             console.log('Error fetching notifications: ', error)
+        }
+    }
+
+    const mark_notifications_read = async () => {
+        try {
+            const response = await apiAuth.post('/notifications/mark-notifications');
+            console.log("Mark notifications: ", response.data.success)
+            if(response.data.success === true) {
+                console.log('Marked read');
+                setUnread(0);
+            }
+            
+        } catch (error) {
+            console.error('Notifications Error: ', error);
         }
     }
 
@@ -37,9 +58,6 @@ const NotificationProvider = ({ children }) => {
         // Real-time notifications
         socket.on("notification", handler);
 
-        
-        fetch_notifications()
-
 
         // Cleanup
         return () => {
@@ -53,6 +71,8 @@ const NotificationProvider = ({ children }) => {
                 notifications,
                 unread,
                 setUnread,
+                mark_notifications_read,
+                fetch_notifications
             }}
         >
             {children}

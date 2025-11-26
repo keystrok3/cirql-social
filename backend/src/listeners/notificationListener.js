@@ -79,7 +79,7 @@ notificationEvents.on("notification.created", async (payload) => {
         sockets.forEach(socketId => {
             io.to(socketId).emit("notification", {
                 id: notification.id,
-                actor: notification.actor_id,
+                actor: notification.actor,
                 notification_type: notification.notification_type,
                 source_id: notification.source_id,
                 sourceType: notification.sourceType,

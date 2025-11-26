@@ -72,7 +72,16 @@ const sync_tables = async () => {
     User.hasMany(Comment, { foreignKey: 'user' });
     Comment.belongsTo(User, { foreignKey: 'user' });
 
-    Notification.belongsTo(Post, {
+
+    User.hasMany(Notification, {
+        foreignKey: 'receiver'
+    });
+    Notification.belongsTo(User, {
+        foreignKey: 'receiver',
+        as: 'actorInfo'
+    });
+
+    Notification.belongsTo(Repost, {
         foreignKey: 'source_id',
         as: 'repostSource',
         constraints: false // disable fk check in db
