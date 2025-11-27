@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import InfoSidebar from "./InfoSidebar";
+import BottomNav from "../../components/BottomNav";
 
 const MainLayout = () => {
   return (
@@ -41,6 +42,7 @@ const MainLayout = () => {
         }}
       >
         <Outlet />
+        <BottomNav />
       </Box>
 
       {/* Right Sidebar */}
