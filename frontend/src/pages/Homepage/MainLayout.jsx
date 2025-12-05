@@ -1,10 +1,13 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import InfoSidebar from "./InfoSidebar";
 import BottomNav from "../../components/BottomNav";
 
 const MainLayout = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
@@ -42,7 +45,7 @@ const MainLayout = () => {
         }}
       >
         <Outlet />
-        <BottomNav />
+        { isMobile && <BottomNav /> }
       </Box>
 
       {/* Right Sidebar */}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // Assuming react-router-dom usage
+
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -61,17 +61,16 @@ export default function BottomNav() {
         bottom: 0,
         opacity: 1,
         width: '100%',
-        borderTop: '1px solid #e0e0e0', // Changed red to a standard border color
+        borderTop: '1px solid #e0e0e0',
         backgroundColor: '#fff',
-        zIndex: 1000 // Ensures it stays on top of content
+        zIndex: 1000
       }}
     >
       {navItems.map((item) => (
         <BottomNavigationAction
           key={item.label}
-          label={item.label}
+          // label={item.label}
           value={item.path}
-          // 4. The Logic: Check if current path matches item path
           icon={
             location.pathname === item.path 
               ? item.iconActive 
