@@ -6,21 +6,16 @@ const { getIO, getUserSockets } = require('../socket/socket');
 
 
 
-notificationEvents.on("post.liked", async ({ receiver, actor, likeId}) => {
-
-    const notification = await Notification.create({
-        receiver,
-        actor: actor,
-        notification_type: "like",
-        source_id: likeId,
-        sourceType: "Like",
-        is_read: false
-    });
+/**
+ * Emits an event that a post has been liked
+*/
+notificationEvents.on("post.liked", async ({ receiver, actor, likeId, post_id}) => {
 
     // emit to WebSocket client
     const io = getIO();
     const sockets = getUserSockets(receiver);
 
+    const notification = { receiver, actor, likeId, post_id }
     sockets.forEach(socketId => {
         io.to(socketId).emit("notification", notification)
     })

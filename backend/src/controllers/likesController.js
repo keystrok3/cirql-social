@@ -38,7 +38,8 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
         notificationEvent.emit("post.liked", {
             receiver: post.user,
             actor: username,
-            likeId: like.like_id
+            likeId: like.like_id,
+            post: like.post_id
         });
 
         notificationEvent.emit("notification.created", {
