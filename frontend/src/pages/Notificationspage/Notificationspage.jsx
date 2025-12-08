@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const Notificationpage = () => {
     const { notifications, mark_notifications_read, fetch_notifications } = useNotification();
+
     const navigate = useNavigate();
 
 
@@ -36,7 +37,7 @@ const Notificationpage = () => {
             <Divider />
 
             <Stack m={'1em 0'}>
-                {notifications.map((notf, idx) => {
+                {notifications?.map((notf, idx) => {
                     return (
                         <NotificationItem key={idx} notf={notf}/>
                     )

@@ -78,8 +78,16 @@ const sync_tables = async () => {
     });
     Notification.belongsTo(User, {
         foreignKey: 'receiver',
+    });
+
+    User.hasMany(Notification, {
+        foreignKey: 'actor'
+    });
+    Notification.belongsTo(User, {
+        foreignKey: 'actor',
         as: 'actorInfo'
     });
+
 
     Notification.belongsTo(Repost, {
         foreignKey: 'source_id',

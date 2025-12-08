@@ -20,8 +20,16 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
     });
 
     if (existing_like) {
+
         // Unlike
         await existing_like.destroy();
+
+        notificationEvent.emit("post.unliked", {
+            receiver: post.user,
+            actor: username,
+            likeId: existing_like.like_id,
+            post: existing_like.post_id
+        })
         return res.status(200).json({ message: "Unliked" });
     }
 
@@ -30,8 +38,6 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
         post_id,
         user: username
     });
-
-    console.log(like)
 
     if(like.user !== post.user) {  
         // emit notification event when the user liking is not the user who posted
