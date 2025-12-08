@@ -1,22 +1,10 @@
 import { useEffect, useState } from "react";
 import { apiAuth } from "../api/axios";
 
-const useReposts = (post_id) => {
+const useReposts = (post_id, repostRefetchTrigger) => {
     const [repostCount, setRepostCount] = useState(0);
     const [reposted, setReposted] = useState(false);
 
-    const fetch_repost_count = async () => {
-        try {
-            const response = await apiAuth.get(`/reposts/${post_id}/get-repost-count`);
-            if (response.status === 200) {
-                setRepostCount(response.data.repost_count);
-            } else {
-                console.error("Error fetching repost count:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error fetching repost count:", error);
-        }
-    };
 
     const check_reposted = async () => {
         try {
@@ -51,9 +39,22 @@ const useReposts = (post_id) => {
     };
 
     useEffect(() => {
+        const fetch_repost_count = async () => {
+            try {
+                const response = await apiAuth.get(`/reposts/${post_id}/get-repost-count`);
+                if (response.status === 200) {
+                    setRepostCount(response.data.repost_count);
+                } else {
+                    console.error("Error fetching repost count:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching repost count:", error);
+            }
+        };
+
         fetch_repost_count();
         check_reposted();
-    }, [post_id]);
+    }, [post_id, repostRefetchTrigger]);
 
     return { repostCount, reposted, toggleRepost };
 };

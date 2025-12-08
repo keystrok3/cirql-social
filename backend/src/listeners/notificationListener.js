@@ -64,7 +64,7 @@ notificationEvents.on("notification.created", async (payload) => {
             })
         });
 
-        console.log(`Real-time notification sent to ${payload.receiver}`);
+        console.log(`Real-time ${payload.notification_type} notification sent to ${payload.receiver}`);
 
 
     } catch (error) {

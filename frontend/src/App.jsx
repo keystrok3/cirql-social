@@ -13,6 +13,7 @@ import NotificationProvider from './context/NotificationContext.jsx';
 import SocketProvider from './context/SocketProvider.jsx';
 import Notificationpage from './pages/Notificationspage/Notificationspage.jsx';
 import LikeProvider from './context/LikesContext.jsx';
+import RepostProvider from './context/RepostProvider.jsx';
 
 const App = () => {
 
@@ -20,24 +21,26 @@ const App = () => {
       <SocketProvider>    
         <NotificationProvider>
           <LikeProvider>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
+            <RepostProvider>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* Protected + Layout routes */}
-              <Route element={<ProtectedRoute />}>
-                {/* Main layout (desktop only) */}
-                <Route element={<MainLayout />}>
-                  <Route index element={<Home />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/profile" element={<Profilepage />} />
-                  <Route path="/post/:post_id" element={<PostPage />} />
-                  <Route path="/edit-profile" element={<EditProfile />} />
-                  <Route path="/notifications" element={<Notificationpage />}/>
+                {/* Protected + Layout routes */}
+                <Route element={<ProtectedRoute />}>
+                  {/* Main layout (desktop only) */}
+                  <Route element={<MainLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/profile" element={<Profilepage />} />
+                    <Route path="/post/:post_id" element={<PostPage />} />
+                    <Route path="/edit-profile" element={<EditProfile />} />
+                    <Route path="/notifications" element={<Notificationpage />}/>
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
+              </Routes>
+            </RepostProvider>
           </LikeProvider>
         </NotificationProvider>
     </SocketProvider>

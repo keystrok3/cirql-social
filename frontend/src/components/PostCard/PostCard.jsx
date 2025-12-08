@@ -19,14 +19,18 @@ import useReposts from "../../hooks/useReposts";
 import useComments from "../../hooks/useComments";
 import usePostLikes from "../../hooks/usePostlikes";
 import { useLikeUpdates } from "../../context/LikesContext";
+import { useRepost } from "../../context/RepostProvider";
 
 const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
   const { likeUpdates } = useLikeUpdates();
+  const { repostUpdates } = useRepost()
+
   const refetchTrigger = likeUpdates[post_id] || 0;
+  const repostRefetchTrigger = repostUpdates[post_id] || 0;
 
   const { likesCount, currentUserLikes, toggleLike } = usePostLikes(post_id, refetchTrigger);
-  const { repostCount, reposted, toggleRepost } = useReposts(post_id);
+  const { repostCount, reposted, toggleRepost } = useReposts(post_id, repostRefetchTrigger);
   const { commentCount } = useComments(post_id);
 
   const theme = useTheme();

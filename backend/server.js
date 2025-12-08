@@ -28,6 +28,7 @@ sync_tables();
 
 require("./src/listeners/notificationListener.js");
 require("./src/listeners/likeEventListener.js");
+require("./src/listeners/repostEventListeners.js");
 
 // Middleware
 app.use(cors({

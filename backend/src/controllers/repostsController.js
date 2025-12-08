@@ -1,3 +1,5 @@
+const notificationEvent = require("../events/notificationEvent");
+const repostEvent = require("../events/repostEvent");
 const Post = require("../models/post");
 const Repost = require("../models/repost");
 
@@ -24,14 +26,39 @@ const toggle_repost = catchAsync(async (req, res, next) => {
     if (existing_repost) {
         // Undo repost
         await existing_repost.destroy();
+
+        repostEvent.emit("repost.undone", {
+            receiver: post.user,
+            actor: username,
+            repostId: existing_repost.repost_id,
+            post: existing_repost.post
+        })
         return res.status(200).json({ message: "Repost undone" });
     }
 
     // Create repost
-    await Repost.create({
+    const repost = await Repost.create({
         post: post_id,
         user: username
     });
+
+
+    if(repost.user !== post.user) {
+        notificationEvent.emit("notification.created", {
+            receiver: post.user,
+            actor: username,
+            notification_type: "Repost",
+            source_id: repost.repost_id,
+            sourceType: "Repost"
+        });
+
+        repostEvent.emit("post.reposted", {
+            receiver: post.user,
+            actor: username,
+            repostId: repost.repost_id,
+            post: repost.post
+        })
+    }
 
     return res.status(201).json({ message: "Reposted" });
 });
