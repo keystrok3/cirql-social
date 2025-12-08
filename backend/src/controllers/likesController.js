@@ -1,3 +1,4 @@
+const likeEvent = require("../events/likeEvent");
 const notificationEvent = require("../events/notificationEvent");
 const PostLike = require("../models/like");
 const Post = require("../models/post");
@@ -24,7 +25,7 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
         // Unlike
         await existing_like.destroy();
 
-        notificationEvent.emit("post.unliked", {
+        likeEvent.emit("post.unliked", {
             receiver: post.user,
             actor: username,
             likeId: existing_like.like_id,
@@ -41,7 +42,7 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
 
     if(like.user !== post.user) {  
         // emit notification event when the user liking is not the user who posted
-        notificationEvent.emit("post.liked", {
+        likeEvent.emit("post.liked", {
             receiver: post.user,
             actor: username,
             likeId: like.like_id,
