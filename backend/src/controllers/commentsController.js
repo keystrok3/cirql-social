@@ -24,14 +24,15 @@ const create_comment = catchAsync(async (req, res, next) => { // Wrapped
         content: content
     });
 
-    console.log(`Comment posted ${comment.content} by user: ${comment.user}`, );
 
     if(post.user !== comment.user) {
         console.log('event triggered')
-        notificationEvents.emit("post.commented", {
+        notificationEvents.emit("notification.created", {
             receiver: post.user,
             actor: username,
-            commentId: comment.comment_id
+            notification_type: "Comment",
+            source_id: comment.comment_id,
+            sourceType: "Comment"
         })
     }
 

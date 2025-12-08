@@ -57,7 +57,6 @@ const toggle_like_post = catchAsync(async (req, res, next) => {
             sourceType: "Like"
         });
         
-        console.error("Error in notification listener:");
     }
     
 
