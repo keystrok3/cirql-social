@@ -44,7 +44,7 @@ const sync_tables = async () => {
         as: 'Followee'
     })
 
-    User.hasMany(Post, { foreignKey: 'user' });
+    User.hasMany(Post, { foreignKey: 'user', onDelete: 'CASCADE' });
     Post.belongsTo(User, { foreignKey: 'user' });
 
     // PostImages relationship
@@ -59,10 +59,10 @@ const sync_tables = async () => {
     PostLike.belongsTo(User, { foreignKey: 'user' });
 
     // Reposts relationships
-    Post.hasMany(Repost, { foreignKey: 'post_id' });
-    Repost.belongsTo(Post, { foreignKey: 'post_id'});
+    Post.hasMany(Repost, { foreignKey: 'post', onDelete: 'CASCADE' });
+    Repost.belongsTo(Post, { foreignKey: 'post' });
 
-    User.hasMany(Repost, { foreignKey: 'user' });
+    User.hasMany(Repost, { foreignKey: 'user', onDelete: 'CASCADE' });
     Repost.belongsTo(User, { foreignKey: 'user' });
 
     // Comments relationships

@@ -43,7 +43,35 @@ const create_post = catchAsync(async (req, res, next) => { // Wrapped
     }
 
     return res.status(201).json({ message: "Post created" });
-}); // Removed try...catch
+});
+
+
+const delete_post = async (req, res, next) => {
+    try {
+        const { username } = req.user;
+        const { post_id } = req.params;
+
+        const user = await User.findByPk(username);
+
+        if (!user) {
+            throw new NotFoundError("User");
+        }
+
+
+        const post = await Post.findOne({ where: { user: username, post_id: post_id }});
+
+        if(!post) {
+            throw new NotFoundError("post");
+        }
+
+        await post.destroy();
+
+        return res.status(201).json({ message: "Post Deleted" });
+    } catch (error) {
+        console.error('Error deleting post: ', error);
+        return res.status(500).json({message: 'Server Error'});
+    }
+}
 
 const fetch_posts_by_this_user = catchAsync(async (req, res, next) => { // Wrapped
     const { username } = req.user;
@@ -137,4 +165,10 @@ const fetch_all_posts = catchAsync(async (req, res, next) => { // Wrapped
     return res.status(200).json({ data: flattened_posts });
 }); // Removed try...catch
 
-module.exports = { create_post, fetch_posts_by_this_user, fetch_posts_by_other_user, fetch_all_posts };
+module.exports = { 
+    create_post, 
+    fetch_posts_by_this_user, 
+    fetch_posts_by_other_user, 
+    fetch_all_posts,
+    delete_post
+ };

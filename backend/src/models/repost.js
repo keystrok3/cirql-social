@@ -28,7 +28,8 @@ Repost.init({
         references: {
             model: User,
             key: 'username'
-        }
+        },
+        onDelete: 'CASCADE'
     }
 }, {
     sequelize,

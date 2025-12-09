@@ -21,18 +21,19 @@ const PostPage = () => {
 
   const handleChange = (e) => {
     const comment = e.target.value;
+
     setPostBody({ content: comment});
   };
 
   const handlePost = async () => {
-    if(post_body === "") return;
+    if(post_body.content === "") return;
 
     try {
       await create_comment(post_body);
     } catch (error) {
-      // 
+      console.log('Error posting comment: ', error);
     } finally{ 
-      setPostBody({ content: ""})
+      setPostBody({ content: ""});
     }
   }
 
