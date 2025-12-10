@@ -48,6 +48,7 @@ app.use('/api/likes', require('./src/routes/likesRoute.js'));
 app.use('/api/reposts', require('./src/routes/repostRoute.js'));
 app.use('/api/comments', require('./src/routes/commentRoute.js'));
 app.use('/api/notifications', require('./src/routes/notifications.route.js'));
+app.use('/api/users', require('./src/routes/otheruserRoute.js'));
 app.use(errorHandler)
 
 

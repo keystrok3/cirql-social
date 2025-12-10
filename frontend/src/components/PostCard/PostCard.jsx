@@ -109,15 +109,32 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
           {/* HEADER ROW */}
           <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap", flex: 1 }}>
-              <Typography variant="subtitle1" component={'a'} sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+              <Typography
+                variant="subtitle1"
+                component={'a'}
+                href={`/user-profile/${username}`}
+                sx={{ 
+                  fontWeight: 600, 
+                  lineHeight: 1.2, 
+                  textDecoration: 'none', 
+                  color: 'inherit',
+                  '&:hover': {
+                    textDecoration: 'underline'
+                  }
+                }}
+              >
                 {screen_name || username}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                @{username}
-              </Typography>
-              <Typography variant="body2" color="text.disabled">
-                • {elapsed_time(timePosted) || "Just now"}
-              </Typography>
+
+              {/* The @username - wrapped in an <a> tag */}
+              <a
+                href={`/user-profile/${username}`} // Set the link here
+                style={{ textDecoration: 'none' }} // Remove underline
+              >
+                <Typography variant="body2" color="text.secondary">
+                  @{username}
+                </Typography>
+              </a>
             </Box>
 
             {/* Users can perform post actions on their */}

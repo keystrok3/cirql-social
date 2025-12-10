@@ -15,6 +15,7 @@ import Notificationpage from './pages/Notificationspage/Notificationspage.jsx';
 import LikeProvider from './context/LikesContext.jsx';
 import RepostProvider from './context/RepostProvider.jsx';
 import DataProvider from './context/DataProvider.jsx';
+import UserProfilePage from './pages/ProfilePage/UserProfilePage.jsx';
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
                     <Route index element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/profile" element={<Profilepage />} />
+                    <Route path="/user-profile/:user" element={<UserProfilePage />} />
                     <Route path="/post/:post_id" element={<PostPage />} />
                     <Route path="/edit-profile" element={<EditProfile />} />
                     <Route path="/notifications" element={<Notificationpage />}/>

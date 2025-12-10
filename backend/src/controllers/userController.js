@@ -107,7 +107,7 @@ const updateProfile = catchAsync(async (req, res, next) => { // Wrapped
 
 
 /** Fetch user profile */ 
-const fetchProfile = catchAsync(async (req, res, next) => { // Wrapped
+const fetchProfile = catchAsync(async (req, res, next) => {
   
     const { username } = req.user;
 
@@ -128,7 +128,7 @@ const fetchProfile = catchAsync(async (req, res, next) => { // Wrapped
             banner_image: user.banner_image
         } 
     });
-}); // Removed try...catch
+});
 
 
 const fetch_bio_screenname = catchAsync(async (req, res, next) => { // Wrapped
