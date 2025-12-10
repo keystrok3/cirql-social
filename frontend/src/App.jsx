@@ -14,10 +14,12 @@ import SocketProvider from './context/SocketProvider.jsx';
 import Notificationpage from './pages/Notificationspage/Notificationspage.jsx';
 import LikeProvider from './context/LikesContext.jsx';
 import RepostProvider from './context/RepostProvider.jsx';
+import DataProvider from './context/DataProvider.jsx';
 
 const App = () => {
 
   return (
+    <DataProvider>
       <SocketProvider>    
         <NotificationProvider>
           <LikeProvider>
@@ -43,7 +45,9 @@ const App = () => {
             </RepostProvider>
           </LikeProvider>
         </NotificationProvider>
-    </SocketProvider>
+      </SocketProvider>
+    </DataProvider>
+      
   );
 };
 

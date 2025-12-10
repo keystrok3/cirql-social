@@ -13,15 +13,19 @@ import {
 
 import { Image as ImageIcon, Send as SendIcon, Close as CloseIcon } from "@mui/icons-material";
 import { apiAuth } from '../../api/axios';
+import { useData } from "../../context/DataProvider";
 
 export default function PostComposer() {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [alert, setAlert] = useState({ open: false, type: "", message: "" });
 
+  const { fetchAllPosts } = useData();
+
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const remainingSlots = 4 - images.length;
+
 
     if (files.length > remainingSlots) {
       setAlert({
@@ -77,7 +81,11 @@ export default function PostComposer() {
 
       setContent("");
       setImages([]);
+
+      await fetchAllPosts();
+
     } catch (error) {
+      console.log('Posting error: ', error)
       setAlert({
         open: true,
         type: "error",

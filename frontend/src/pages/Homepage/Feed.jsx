@@ -3,28 +3,10 @@ import PostCard from "../../components/PostCard/PostCard";
 import { useState, useEffect } from "react";
 import { apiAuth } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useData } from "../../context/DataProvider";
 
 const Feed = () => {
-  const [posts, setPosts] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchAllPosts = async () => {
-      try {
-        const response = await apiAuth.get("/posts/fetch-all-posts");
-        if (response.status !== 200) {
-          console.error("Could not fetch:", response.statusText);
-          return;
-        }
-        console.log(response.data.data)
-        setPosts(response.data.data);
-      } catch (error) {
-        console.error("Error fetching:", error);
-      }
-    };
-
-    fetchAllPosts();
-  }, []);
+  const { posts } = useData();
 
   return (
     <Box p={0}>

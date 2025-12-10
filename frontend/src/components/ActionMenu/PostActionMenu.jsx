@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { apiAuth } from '../../api/axios';
+import { useData } from '../../context/DataProvider';
 
-export default function PostActionsMenu({ post_id}) {
+export default function PostActionsMenu({ post_id }) {
+  const { deletePost } = useData();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -17,15 +19,8 @@ export default function PostActionsMenu({ post_id}) {
     setAnchorEl(null);
   };
 
-  const handleDeletePost = async (e) => {
-    try {
-      const response = await apiAuth.delete(`/posts/delete-post/${post_id}`);
-      
-      console.log('Post deleted: ', response.data.message)
-      alert(response.data.message);
-    } catch (error) {
-      console.log('Error deleting post: ', error);
-    }
+  const handleDeletePost = async () => {
+    await deletePost(post_id);
   };
 
 
