@@ -22,6 +22,7 @@ import { useLikeUpdates } from "../../context/LikesContext";
 import { useRepost } from "../../context/RepostProvider";
 import PostActionsMenu from "../ActionMenu/PostActionMenu";
 import { useAuth } from "../../context/AuthProvider";
+import React from "react";
 
 const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
@@ -227,4 +228,6 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
   );
 };
 
-export default PostCard;
+
+
+export default React.memo(PostCard);

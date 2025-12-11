@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
   IconButton,
+  Divider,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import EditModal from "./EditModal";
 import MainLayout from "../Homepage/MainLayout"; // assuming layout is in Home/
+import UserProfileFeed from "./UserPostFeed";
  
 const ProfilePage = () => {
   const { userData } = useAuth();
@@ -114,6 +116,8 @@ const ProfilePage = () => {
               </Typography>
             </Stack>
           </Box>
+
+          <UserProfileFeed />
         </Container>
       </Box>
   );

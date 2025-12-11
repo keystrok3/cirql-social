@@ -64,7 +64,7 @@ const toggle_repost = catchAsync(async (req, res, next) => {
 });
 
 
-const check_user_repost = catchAsync(async (req, res, next) => { // Wrapped
+const check_user_repost = catchAsync(async (req, res, next) => {
     const { post_id } = req.params;
     const { username } = req.user;
 
@@ -78,7 +78,7 @@ const check_user_repost = catchAsync(async (req, res, next) => { // Wrapped
     const has_reposted = await Repost.findOne({ where: { user: username, post: post_id }});
 
     return res.status(200).json({ reposted: !!has_reposted });
-}); // Removed try...catch
+});
 
 const get_repost_count = catchAsync(async (req, res, next) => { // Wrapped
     const { post_id } = req.params;
@@ -91,7 +91,8 @@ const get_repost_count = catchAsync(async (req, res, next) => { // Wrapped
     const count = await Repost.count({ where: { post: post_id } });
 
     return res.status(200).json({ repost_count: count });
-}); // Removed try...catch
+});
+
 
 
 module.exports = { toggle_repost, check_user_repost, get_repost_count };

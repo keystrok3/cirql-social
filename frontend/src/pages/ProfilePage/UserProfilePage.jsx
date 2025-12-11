@@ -6,12 +6,15 @@ import {
   Stack,
   Typography,
   IconButton,
+  Divider,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchUserProfile } from "../../hooks/useFetchUserProfile";
 import { useEffect } from "react";
+import UserPostFeed from "./UserPostFeed";
+import FollowingDisplay from "../../components/FollowingDisplay/FollowingDisplay";
 
 const UserProfilePage = () => {
     const { user } = useParams();
@@ -129,6 +132,12 @@ const UserProfilePage = () => {
                     </Typography>
                 </Stack>
             </Box>
+
+            <FollowingDisplay />
+
+            <Divider />
+
+            <UserPostFeed />
         </Container>
         </Box>
     );
