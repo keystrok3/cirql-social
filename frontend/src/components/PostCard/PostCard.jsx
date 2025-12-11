@@ -113,6 +113,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
                 variant="subtitle1"
                 component={'a'}
                 href={`/user-profile/${username}`}
+                onClick={e => e.stopPropagation()}
                 sx={{ 
                   fontWeight: 600, 
                   lineHeight: 1.2, 
