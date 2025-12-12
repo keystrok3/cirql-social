@@ -113,7 +113,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
               <Typography
                 variant="subtitle1"
                 component={'a'}
-                href={`/user-profile/${username}`}
+                href={`/user/${username}`}
                 onClick={e => e.stopPropagation()}
                 sx={{ 
                   fontWeight: 600, 
@@ -160,7 +160,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
           {image && (
             <Box
               component="img"
-              src={`http://localhost:8000/${image}`}
+              src={`${import.meta.env.VITE_API_URL}/${image}`}
               alt="Post content"
               sx={{
                 width: "100%",

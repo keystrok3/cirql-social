@@ -17,6 +17,7 @@ import RepostProvider from './context/RepostProvider.jsx';
 import DataProvider from './context/DataProvider.jsx';
 import UserProfilePage from './pages/ProfilePage/UserProfilePage.jsx';
 import { Suspense } from 'react';
+import Profile from './pages/ProfilePage/Profile.jsx';
 
 const App = () => {
 
@@ -38,8 +39,8 @@ const App = () => {
                     <Route element={<MainLayout />}>
                       <Route index element={<Home />} />
                       <Route path="/home" element={<Home />} />
-                      <Route path="/profile" element={<Profilepage />} />
-                      <Route path="/user-profile/:user" element={<UserProfilePage />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/user/:user" element={<Profile />} />
                       <Route path="/post/:post_id" element={<PostPage />} />
                       <Route path="/edit-profile" element={<EditProfile />} />
                       <Route path="/notifications" element={<Notificationpage />}/>
