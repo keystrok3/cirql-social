@@ -3,12 +3,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { useFollowing } from "../../hooks/useFollowing";
 import { Box, Typography, CircularProgress } from "@mui/material";
 
-function FollowingDisplay() {
-    const { userData } = useAuth();
-    const loggedInUsername = userData?.user?.username;
-
-    const { user } = useParams();
-    const username = loggedInUsername || user;
+function FollowingDisplay({ username }) {
 
     const { followers, followees, isLoading, error } = useFollowing(username);
 
@@ -22,6 +17,16 @@ function FollowingDisplay() {
     }
 
     if (error) {
+        return (
+            <Box p={2}>
+                <Typography color="error">
+                    Error: {error}
+                </Typography>
+            </Box>
+        );
+    }
+
+    if (!username) {
         return (
             <Box p={2}>
                 <Typography color="error">

@@ -5,17 +5,18 @@ import { useFetchUserProfile } from "./useFetchUserProfile";
 
 export const useProfile = (usernameParam) => {
 
-    const { userData } = useAuth(usernameParam);
+    const { userData } = useAuth();
     const authUser = userData?.user;
 
-    const viewingOther = usernameParam && usernameParam !== authUser?.username;
+    const viewingOther = Boolean(usernameParam && usernameParam !== authUser?.username);
 
     const { fetch_profile, profileData, loading } = useFetchUserProfile(usernameParam);
 
     useEffect(() => {
-        console.log('viewing other: ', viewingOther === true)
-        if(viewingOther) fetch_profile();
-    }, [viewingOther, fetch_profile]);
+        if(viewingOther) {
+            fetch_profile();
+        }
+    }, [usernameParam, viewingOther]);
 
     const profile = viewingOther ? profileData : authUser;
 

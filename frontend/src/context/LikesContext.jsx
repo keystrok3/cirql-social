@@ -12,7 +12,6 @@ const LikeProvider = ({ children }) => {
 
     useEffect(() => {
         if(!socket) return;
-        console.log("In LikeProvider")
 
         const handleLikeUpdate = (data) => {
             console.log("Real-time like update: ", data);

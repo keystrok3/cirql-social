@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { apiAuth } from "../api/axios.js";
 
@@ -6,7 +6,7 @@ export const useFetchUserProfile = (user) => {
     const [ profileData, setProfileData ] = useState({});
     const [ loading, setLoading ] = useState(false);
 
-    const fetch_profile = async () => {
+    const fetch_profile = useCallback(async () => {
         try {
             setLoading(true);
 
@@ -21,7 +21,7 @@ export const useFetchUserProfile = (user) => {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
     return { fetch_profile, profileData, loading };
 };

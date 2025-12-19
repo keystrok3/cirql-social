@@ -55,6 +55,47 @@ const toggle_follow = catchAsync(async (req, res, next) => { // Wrapped
     return res.status(statusCode).json({ message });
 });
 
+/**
+ * Check if a user is followed by auth user
+ * */ 
+const check_user_follows = async (req, res) => {
+
+    try {
+        const { username } = req.user;
+        const { username: user_check } = req.params;
+
+        const is_followed = await Follows.findOne({ where: { user: username, follows: user_check }});
+
+        if(is_followed) {
+            return res.status(200).json({ follows: true });
+        }
+
+        return res.status(200).json({ follows: false });
+    } catch (error) {
+        console.error('Error checking following status', error)
+    }
+}
+
+/**
+ * Check if a user follows auth user
+ * */ 
+const check_user_followed = async (req, res) => {
+
+    try {
+        const { username } = req.user;
+        const { username: user_check } = req.params;
+        
+        const follows = await Follows.findOne({ where: { user: user_check, follows: username }});
+
+        if(follows) {
+            return res.status(200).json({ follows: true });
+        }
+
+        return res.status(200).json({ follows: false });
+    } catch (error) {
+        console.error('Error checking following status', error)
+    }
+}
 
 /**
  * Get all the users a specific user is following
@@ -84,6 +125,8 @@ const fetch_user_following = catchAsync(async (req, res, next) => {
 });
 
 
+
+
 /**
  * Fetch all the followers of a specific user
  * */
@@ -111,4 +154,10 @@ const getFollowers = catchAsync(async (req, res) => {
     return res.status(200).json(followerUsers);
 });
 
-module.exports = { toggle_follow, fetch_user_following, getFollowers };
+module.exports = { 
+    toggle_follow, 
+    fetch_user_following, 
+    getFollowers,
+    check_user_followed,
+    check_user_follows
+};

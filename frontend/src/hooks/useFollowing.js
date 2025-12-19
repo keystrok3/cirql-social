@@ -1,27 +1,67 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiAuth } from "../api/axios";
 
 export const useFollowing = (username) => {
     const [followers, setFollowers] = useState([]);
     const [followees, setFollowees] = useState([]);
-    // 1. Add loading state
     const [isLoading, setIsLoading] = useState(true); 
-    // 2. Add error state
     const [error, setError] = useState(null); 
 
+    const toggle_follow = async () => {
+        try {
+            const response = await apiAuth.post(`/following/toggle-follow/${username}`);
+            if(response.status === 201) {
+                // console.log("Following ", username);
+                return
+            } else if(response.status === 200) {
+                // console.log("Unfollowed ", username)
+            }
+        } catch (error) {
+            setError(error || "An unknown error occurred");
+        }
+    };
+
+    const is_following = useCallback( async () => {
+
+        try {
+            const response = await apiAuth.get(`/following/check-user-follows/${username}`);
+
+            if(response.data.follows) {
+                return true;
+            }
+        } catch (error) {
+            console.error('Error checking follow status', error);
+            return false;
+        }
+    }, []);
+
+    const is_followed = useCallback(async () => {
+        try {
+            const response = await apiAuth.get(`/following/check-user-followed/${username}`);
+
+            if(response.data.follows) {
+                return true;
+            }
+        } catch (error) {
+            console.error('Error checking follow status', error);
+        } finally {
+            return false;
+        }
+    }, []);
+
     useEffect(() => {
+        if(!username) return;
+
         const fetchData = async () => {
-            // Set loading to true at the start
             setIsLoading(true);
             setError(null);
 
             try {
                 // Fetch followees
                 const followeesResponse = await apiAuth.get(`/following/fetch-followees/${username}`);
-                if (followeesResponse.status === 200) { // Note: Use status, not statusText
+                if (followeesResponse.status === 200) {
                     setFollowees(followeesResponse.data);
                 } else {
-                    // Handle non-200 status codes if necessary
                     throw new Error("Failed to fetch followees."); 
                 }
 
@@ -35,16 +75,14 @@ export const useFollowing = (username) => {
 
             } catch (err) {
                 console.error('Error fetching data: ', err);
-                setError(err.message || 'An unknown error occurred.');
+                setError(err || 'An unknown error occurred.');
             } finally {
-                // Set loading to false when all operations are complete
                 setIsLoading(false); 
             }
         };
 
         fetchData();
-    }, []);
+    }, [username]);
 
-    // Return the new states
-    return { followers, followees, isLoading, error };
+    return { followers, followees, toggle_follow, isLoading, error, is_followed, is_following };
 }

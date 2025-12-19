@@ -15,9 +15,6 @@ const DataProvider = ({ children }) => {
             console.error("Could not fetch:", response.statusText);
             return;
         }
-        console.log("prev:", posts);
-        console.log("next:", response.data.data);
-        console.log("same?", posts === response.data.data);
 
         setPosts([ ...response.data.data ]);
         } catch (error) {
@@ -29,7 +26,6 @@ const DataProvider = ({ children }) => {
         try {
             const response = await apiAuth.delete(`/posts/delete-post/${post_id}`);
             setPosts(prev => prev.filter(post => post.post_id !== post_id));
-            console.log('Post deleted: ', response.data.message)
             alert(response.data.message);
         } catch (error) {
             console.log('Error deleting post: ', error);

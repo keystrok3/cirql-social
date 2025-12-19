@@ -1,7 +1,7 @@
 // src/pages/Profile/ProfilePage.jsx
 import { Box, Container, Divider } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useProfile } from "../../hooks/useProfile";
 
@@ -19,7 +19,12 @@ const Profile = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((prev) => !prev);
 
-    if (loading && !profile) return <div>Loading...</div>;
+
+    useEffect(() => {
+        console.log('Username param in Profile: ', profile);
+    }, [profile]);
+
+    if (loading && !profile?.username) return <div>Loading...</div>;
 
     return (
         <Box>
@@ -38,7 +43,7 @@ const Profile = () => {
                     mb={4}
                     px={2}
                 >
-                    <ProfileActions isSelf={isSelf} onEdit={toggleModal} />
+                    <ProfileActions username={profile?.username} isSelf={isSelf} onEdit={toggleModal} />
                 </Box>
 
                 {/* Followers / Following */}

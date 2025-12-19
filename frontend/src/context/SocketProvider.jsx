@@ -15,7 +15,6 @@ const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if(!accessToken) return;
-        console.log("accessToken: ", accessToken)
         // create connection once
         const socket = io("http://localhost:8000", {
             // autoConnect: false,

@@ -20,7 +20,6 @@ const usePostLikes = (post_id, refetch_trigger = 0) => {
 
         const fetchLikesCount = async () => {
             try {
-                console.log(`📡 Fetching like count for post ${post_id}...`);
                 const response = await apiAuth.get(`/likes/${post_id}/likes/count`);
                 if (response.status === 200) {
                     setLikesCount(response.data.likes);

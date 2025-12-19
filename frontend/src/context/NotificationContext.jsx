@@ -16,8 +16,6 @@ const NotificationProvider = ({ children }) => {
         try {
             const response = await apiAuth.get('/notifications/get-notifications');
 
-            console.log('Notifications: ', response.data.notifications);
-
             const unread_notifications_count = response
                                                 .data
                                                 .notifications
@@ -34,9 +32,7 @@ const NotificationProvider = ({ children }) => {
     const mark_notifications_read = async () => {
         try {
             const response = await apiAuth.post('/notifications/mark-notifications');
-            console.log("Mark notifications: ", response.data.success)
             if(response.data.success === true) {
-                console.log('Marked read');
                 setUnread(0);
             }
             
@@ -50,7 +46,6 @@ const NotificationProvider = ({ children }) => {
         if(!socket) return;
         
         const handler = (data) => {
-            console.log("Real-time notification: ", data);
             setNotifications((prev) => [data, ...prev]);
             setUnread((prev) => prev + 1);
         }

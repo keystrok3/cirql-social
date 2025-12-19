@@ -15,9 +15,7 @@ const RepostProvider = ({ children }) => {
         if(!socket) return;
 
         const handleRepostUpdate = (data) => {
-            console.log("Real-time repost update: ", data);
             const { post } = data;
-
             setRepostUpdates(prev => ({ ...prev, [post]: (prev[post] || 0) + 1}));
         };
 
