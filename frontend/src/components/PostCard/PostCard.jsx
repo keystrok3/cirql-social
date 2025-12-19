@@ -23,6 +23,7 @@ import { useRepost } from "../../context/RepostProvider";
 import PostActionsMenu from "../ActionMenu/PostActionMenu";
 import { useAuth } from "../../context/AuthProvider";
 import React from "react";
+import { useEffect } from "react";
 
 const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text, image }) => {
 
@@ -79,6 +80,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
     }
   };
 
+
   return (
     <Box
       onClick={handleCommentClick}
@@ -97,7 +99,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
         {/* LEFT COLUMN: AVATAR */}
         <Box sx={{ flexShrink: 0 }}>
           <Avatar
-            src={profilePic ? `${import.meta.env.VITE_API_URL}/${profilePic}` : null}
+            src={`/${profilePic}`}
             sx={{ bgcolor: theme.palette.primary.main, width: 48, height: 48 }}
           >
             {!profilePic && username?.charAt(0).toUpperCase()}
@@ -160,7 +162,7 @@ const PostCard = ({ post_id, profilePic, username, screen_name, timePosted, text
           {image && (
             <Box
               component="img"
-              src={`${import.meta.env.VITE_API_URL}/${image}`}
+              src={`/${image}`}
               alt="Post content"
               sx={{
                 width: "100%",

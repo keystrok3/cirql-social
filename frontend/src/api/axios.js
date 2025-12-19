@@ -12,7 +12,7 @@ const refreshTokenCall = async () => {
   try {
     console.log('Refreshing token...')
     const response = await axios.post(
-      "/api/auth/refresh-token/",
+      "/api/auth/refresh-token",
       {},
       {
         withCredentials: true

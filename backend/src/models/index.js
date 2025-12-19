@@ -145,7 +145,7 @@ const sync_tables = async () => {
         console.log("Table notifications created")
         
     } catch (error) {
-        console.error(`Error syncing tables: ${e}`);
+        console.error(`Error syncing tables: ${error}`);
     }
 };
 

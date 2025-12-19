@@ -83,7 +83,7 @@ const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-            const response = await axios.post('/api/auth/login/', { 
+            const response = await axios.post('/api/auth/login', { 
                 ...data
             });
 
@@ -117,7 +117,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await apiAuth.post('/auth/logout/', {}, { withCredentials: true });
+            const response = await apiAuth.post('/auth/logout', {}, { withCredentials: true });
             if(response.status === 200) {
                 navigate('/login');
             }
@@ -131,7 +131,7 @@ const AuthProvider = ({ children }) => {
 
     const fetch_profile = async () => {
         try {
-            const profile = await apiAuth.get('/profile/fetch_profile/');
+            const profile = await apiAuth.get('/profile/fetch_profile');
 
             localStorage.setItem('user', JSON.stringify(profile.data.user));
             setUserData(profile.data);

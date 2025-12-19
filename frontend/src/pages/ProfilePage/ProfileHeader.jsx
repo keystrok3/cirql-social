@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 const ProfileHeader = ({ profile }) => {
     const navigate = useNavigate();
 
-    const bannerSrc = profile?.banner_image
-        ? `${import.meta.env.VITE_API_URL}/${profile.banner_image}`
-        : "";
+    // const bannerSrc = profile?.banner_image
+    //     ? `${import.meta.env.VITE_API_URL}/${profile.banner_image}`
+    //     : "";
+    const bannerSrc = `/${profile?.banner_image}`
 
-    const avatarSrc = profile?.profile_photo
-        ? `${import.meta.env.VITE_API_URL}/${profile.profile_photo}`
-        : "";
+    // const avatarSrc = profile?.profile_photo
+    //     ? `${import.meta.env.VITE_API_URL}/${profile.profile_photo}`
+    //     : "";
+    const avatarSrc =`/${profile?.profile_photo}`
+
 
     return (
         <>

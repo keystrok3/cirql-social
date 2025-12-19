@@ -1,12 +1,14 @@
 
 # Use Node.js LTS
-FROM node:20
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files first, for caching
-COPY package* .json ./
+COPY package*.json ./
+
+RUN npm install
 
 # Copy the rest of your backend code (server.js + src)
 COPY . .

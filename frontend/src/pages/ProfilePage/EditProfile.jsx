@@ -136,7 +136,7 @@ const EditProfile = () => {
             }}>
                 <Box 
                     component="img"
-                    src={`http://localhost:8000/${userData.user.banner_image}`}
+                    src={`/${userData.user.banner_image}`}
                     sx={{
                         width: '100%',
                         height: '100%',
@@ -171,7 +171,7 @@ const EditProfile = () => {
             {/* ------------------ Profile Picture Section ------------------ */}
             <Box position={'relative'} >
                 <Avatar 
-                    src={`http://localhost:8000/${userData.user.profile_photo}`}
+                    src={`/${userData.user.profile_photo}`}
                     sx={{
                         position: 'absolute',
                         top: {xs: '-40px', sm: '-45px'},
